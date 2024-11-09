@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "esnext",
+    "jsx": "react-jsx",
+    "strict": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true, // Generate declaration files
+    "declarationDir": "dist/types", // Output directory for declaration files
+    "emitDeclarationOnly": false,
+    "downlevelIteration": true
+  },
+  "include": ["src"]
+}
