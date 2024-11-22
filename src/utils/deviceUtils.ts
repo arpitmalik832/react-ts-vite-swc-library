@@ -1,27 +1,22 @@
-function isBrowser() {
-  return typeof window !== 'undefined';
-}
+const isBrowser = () => typeof window !== 'undefined';
 
 const isMobile = {
   android() {
-    return navigator.userAgent.match(/Android/i) ? 'android' : false;
+    return /Android/i.test(navigator.userAgent) ? 'android' : false;
   },
   iOS() {
-    return navigator.userAgent.match(/iPhone|iPad|iPod/i) ? 'ios' : false;
+    return /iPhone|iPad|iPod/i.test(navigator.userAgent) ? 'ios' : false;
   },
   any() {
     return this.android() || this.iOS();
   },
 };
 
-function isMobileBrowser() {
-  return isBrowser() ? isMobile.any() : false;
-}
+const isMobileBrowser = () => (isBrowser() ? isMobile.any() : false);
 
-function isDesktop() {
-  return !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+const isDesktop = () =>
+  !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent,
   );
-}
 
 export { isBrowser, isDesktop, isMobile, isMobileBrowser };

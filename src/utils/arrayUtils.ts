@@ -1,5 +1,3 @@
-function deduplicate<T>(array: Array<T>): Array<T> {
-  return [...new Set<T>(array)];
-}
+const deduplicate = <T>(array: T[]): T[] => [...new Set<T>(array)];
 
 export { deduplicate };

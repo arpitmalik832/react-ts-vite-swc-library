@@ -1,4 +1,5 @@
 import {
+  AxiosError,
   AxiosInstance,
   AxiosResponse,
   InternalAxiosRequestConfig,
@@ -6,14 +7,14 @@ import {
 import { RequestMetadata } from '../types/types.d';
 import { log, errorLog } from './logsUtils';
 
-async function handleRequest<D>(
+const handleRequest = async <D>(
   request: Promise<AxiosResponse<D>>,
-): Promise<D> {
+): Promise<D> => {
   const modRequest = request
     .then(
       res => res.data, // Successful response
     )
-    .catch(error => {
+    .catch((error: AxiosError) => {
       if (error.response) {
         // Axios API Error Response
       } else if (error.message || error.config) {
@@ -36,12 +37,12 @@ async function handleRequest<D>(
     });
 
   return modRequest;
-}
+};
 
-function addRequestInterceptor(axiosInstance: AxiosInstance) {
+const addRequestInterceptor = <T>(axiosInstance: AxiosInstance) => {
   axiosInstance.interceptors.request.use(
     request => {
-      log('Starting request -> ', request.toString());
+      log('Starting request -> ', request);
       const newRequest: InternalAxiosRequestConfig<RequestMetadata> = {
         ...request,
         data: {
@@ -52,44 +53,44 @@ function addRequestInterceptor(axiosInstance: AxiosInstance) {
       };
       return newRequest;
     },
-    error => {
+    (error: AxiosError<T, RequestMetadata>) => {
       errorLog('Request returned with error -> ', error);
       throw error;
     },
   );
-}
+};
 
-function addResponseInterceptor<T>(axiosInstance: AxiosInstance) {
+const addResponseInterceptor = <T>(axiosInstance: AxiosInstance) => {
   axiosInstance.interceptors.response.use(
     response => {
-      log('Returning response -> ', response.toString());
+      log('Returning response -> ', response);
       const newResponse: AxiosResponse<T, RequestMetadata> = {
         ...response,
         config: {
           ...response.config,
           data: {
-            ...response.config.data,
+            ...(response.config.data as RequestMetadata),
             endTime: new Date(),
           },
         },
       };
       if (newResponse.config.data) {
         newResponse.config.data.responseTime =
-          (newResponse.config.data.endTime.getTime() as number) -
-          (newResponse.config.data.startTime.getTime() as number);
+          newResponse.config.data.endTime.getTime() -
+          newResponse.config.data.startTime.getTime();
       }
       return newResponse;
     },
-    error => {
+    (error: AxiosError<T, RequestMetadata>) => {
       const newError = { ...error };
-      newError.config.data.endTime = new Date();
-      newError.config.data.responseTime =
-        newError.config.data.endTime.getTime() -
-        newError.config.data.startTime.getTime();
+      newError.config!.data!.endTime = new Date();
+      newError.config!.data!.responseTime =
+        newError.config!.data!.endTime.getTime() -
+        newError.config!.data!.startTime.getTime();
       errorLog('Response returned with error -> ', newError);
-      throw newError;
+      throw newError as AxiosError<T, RequestMetadata>;
     },
   );
-}
+};
 
 export { handleRequest, addRequestInterceptor, addResponseInterceptor };

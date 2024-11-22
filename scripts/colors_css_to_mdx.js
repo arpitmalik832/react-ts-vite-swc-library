@@ -1,4 +1,3 @@
-/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 /**
  * This script extracts color variables from a CSS file and saves them to an MDX file.
@@ -32,9 +31,7 @@ const colorVariables = [];
 let res = [];
 let match;
 
-function deduplicate(array) {
-  return [...new Set(array)];
-}
+const deduplicate = array => [...new Set(array)];
 
 while (colorRegex.exec(cssContent) !== null) {
   match = colorRegex.exec(cssContent);

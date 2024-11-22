@@ -1,10 +1,12 @@
+import { AxiosInstance } from 'axios';
 import {
   createSlice,
+  PayloadAction,
   SliceCaseReducers,
   SliceSelectors,
 } from '@reduxjs/toolkit';
 
-import { ApisRedux } from '../../types/types.d';
+import { ApisRedux, KeyValuePair } from '../../types/types.d';
 
 const apisSlice = createSlice<
   ApisRedux,
@@ -20,21 +22,24 @@ const apisSlice = createSlice<
     api1AxiosInstance: undefined,
   },
   reducers: {
-    updateApi1Host: (state, action) => ({
+    updateApi1Host: (state, action: PayloadAction<string>) => ({
       ...state,
       api1Host: action.payload,
     }),
-    updateApi1Headers: (state, action) => ({
+    updateApi1Headers: (
+      state,
+      action: PayloadAction<Record<string, string>>,
+    ) => ({
       ...state,
       api1Headers: action.payload,
     }),
-    addToApi1Headers: (state, action) => {
+    addToApi1Headers: (state, action: PayloadAction<KeyValuePair>) => {
       Object.assign(state.api1Headers, {
         [action.payload.key]: action.payload.value,
       });
       return state;
     },
-    updateApi1AxiosInstance: (state, action) => ({
+    updateApi1AxiosInstance: (state, action: PayloadAction<AxiosInstance>) => ({
       ...state,
       api1AxiosInstance: action.payload,
     }),
