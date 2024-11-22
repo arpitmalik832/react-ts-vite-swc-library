@@ -1,12 +1,20 @@
-import type {
-  InternalAxiosRequestConfig,
-  AxiosResponse,
-  AxiosInstance,
-} from 'axios';
+import type { AxiosInstance } from 'axios';
 import type { configureStore } from '@reduxjs/toolkit';
 
+type AllParams =
+  | string
+  | string[]
+  | object
+  | object[]
+  | number
+  | number[]
+  | bigint
+  | bigint[]
+  | boolean
+  | boolean[];
+
 interface VoidFunction extends VoidFunction {
-  (...args: any[]): void;
+  (...args: AllParams[]): void;
 }
 
 interface ComponentWithSuspenseProps {
@@ -47,7 +55,7 @@ interface ApisRedux {
 }
 
 interface NavigationRedux {
-  stack: Array<VoidFunction>;
+  stack: VoidFunction[];
 }
 
 interface ReduxState {
@@ -66,6 +74,11 @@ type TypographyScale = 'h1';
 type TypographyScaleValue = '*px';
 type TypographyWeight = 'bold';
 type TypographyWeightValue = number;
+type TypographyScaleObject = Record<
+  'font-size' | 'line-height' | 'letter-spacing',
+  Record<'value', string>
+>;
+type TypographyWeightObject = Record<'value', TypographyWeightValue>;
 
 interface DesignTokens {
   'color-primitives': Record<
@@ -79,11 +92,11 @@ interface DesignTokens {
     >
   >;
   'color-semantics': Record<
-    Theme,
+    ColorTheme,
     Record<
-      Type,
+      ColorType,
       Record<
-        InnerType,
+        ColorInnerType,
         Record<
           ColorSemanticLabel,
           {
@@ -95,14 +108,8 @@ interface DesignTokens {
     >
   >;
   typography: {
-    scale: Record<
-      TypographyScale,
-      Record<
-        'font-size' | 'line-height' | 'letter-spacing',
-        Record<'value', TypographyScaleValue>
-      >
-    >;
-    weight: Record<TypographyWeight, Record<'value', TypographyWeightValue>>;
+    scale: Record<TypographyScale, TypographyScaleObject>;
+    weight: Record<TypographyWeight, TypographyWeightObject>;
   };
 }
 
@@ -111,3 +118,36 @@ type MQEventListener = (this: MediaQueryList, ev: MediaQueryListEvent) => void;
 type EventListener = (this: Window, ev: Event) => void;
 
 type BeforeUnloadEventListener = (this: Window, ev: BeforeUnloadEvent) => void;
+
+interface EventListenerUtil<T> {
+  callBackFn: T;
+  subscribe(callBackFn: T): void;
+  unSubscribe(): void;
+}
+
+interface KeyValuePair {
+  key: string;
+  value: string;
+}
+
+interface BuildStatsPluginOptions {
+  outputPath?: string;
+}
+
+interface FileStats {
+  fileName: string;
+  size: number;
+  gzippedSize: number;
+  brotliSize: number;
+  contentType: string;
+}
+
+interface CompleteStats {
+  files: FileStats[];
+  totalSize: number;
+  totalGzippedSize: number;
+  totalBrotliSize: number;
+  noOfFiles: number;
+  largestFile: FileStats | null;
+  buildDuration: number;
+}

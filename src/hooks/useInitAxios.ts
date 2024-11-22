@@ -10,7 +10,7 @@ import {
 } from '../utils/apiUtils';
 import { ReduxState, ApisRedux } from '../types/types.d';
 
-function useInitAxios() {
+const useInitAxios = () => {
   const apis = useSelector<ReduxState, ApisRedux>(state => state.apis);
   const dispatch = useDispatch();
 
@@ -32,6 +32,6 @@ function useInitAxios() {
       dispatch(updateApi1AxiosInstance(axiosInstance));
     }
   }, [apis.api1Headers, apis.api1Host]);
-}
+};
 
 export default useInitAxios;

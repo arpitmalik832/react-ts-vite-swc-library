@@ -1,5 +1,5 @@
-function matchMediaMock(matches: boolean) {
-  return jest.fn().mockImplementation(query => ({
+const matchMediaMock = <T>(matches: boolean) =>
+  jest.fn().mockImplementation((query: T) => ({
     matches,
     media: query,
     onchange: null,
@@ -9,6 +9,5 @@ function matchMediaMock(matches: boolean) {
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   }));
-}
 
 export default matchMediaMock;

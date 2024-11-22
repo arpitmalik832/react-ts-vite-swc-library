@@ -52,11 +52,11 @@ describe('useInitAxios unit tests', () => {
       },
     });
 
-    function TempComponent() {
+    const TempComponent = () => {
       useInitAxios();
 
       return <div data-testid="temp-component" />;
-    }
+    };
 
     const component = render(
       <Provider store={store}>
@@ -89,11 +89,11 @@ describe('useInitAxios unit tests', () => {
       },
     });
 
-    function TempComponent() {
+    const TempComponent = () => {
       useInitAxios();
 
       return <div data-testid="temp-component" />;
-    }
+    };
 
     const component = render(
       <Provider store={store}>

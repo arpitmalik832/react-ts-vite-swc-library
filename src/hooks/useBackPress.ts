@@ -11,7 +11,7 @@ import beforeUnload from '../utils/eventListeners/beforeUnload';
 import { log } from '../utils/logsUtils';
 import { ReduxState, NavigationRedux, VoidFunction } from '../types/types.d';
 
-function useBackPress() {
+const useBackPress = () => {
   const { stack } = useSelector<ReduxState, NavigationRedux>(
     state => state.navigation,
   );
@@ -38,13 +38,13 @@ function useBackPress() {
     };
   }, []);
 
-  function push(callback: VoidFunction) {
+  const push = (callback: VoidFunction) => {
     dispatch(pushStack(callback));
-  }
+  };
 
-  function pop() {
+  const pop = () => {
     handleBackPress();
-  }
+  };
 
   const clear = useCallback(() => {
     if (stack.length) {
@@ -53,6 +53,6 @@ function useBackPress() {
   }, [stack]);
 
   return { stack, push, pop, clear };
-}
+};
 
 export default useBackPress;
