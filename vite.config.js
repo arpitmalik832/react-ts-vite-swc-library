@@ -19,7 +19,7 @@ import {
  * // To add visualizer configuration
  * const addons = getAddons();
  */
-function getAddons() {
+const getAddons = () => {
   const addVisualizer = process.env.INCLUDE_VISUALIZER === 'true';
   const addBuildStats = process.env.INCLUDE_BUILD_STATS === 'true';
 
@@ -35,7 +35,7 @@ function getAddons() {
   }
 
   return result;
-}
+};
 
 /**
  * Get the Vite configuration based on the environment.
@@ -45,7 +45,7 @@ function getAddons() {
  * // To get the configuration
  * const config = getConfig();
  */
-function getConfig() {
+const getConfig = () => {
   if (!process.env.LIB_ENV) {
     throw new Error(ERR_NO_LIB_ENV_FLAG);
   }
@@ -54,6 +54,6 @@ function getConfig() {
   }
 
   return defineConfig(mergeConfig(commonConfig, getAddons()));
-}
+};
 
 export default getConfig;

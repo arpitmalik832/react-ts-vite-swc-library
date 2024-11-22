@@ -6,7 +6,7 @@ import preferredColorScheme from '../utils/eventListeners/preferredColorScheme';
 import { THEME } from '../enums/app';
 import { ReduxState, AppRedux } from '../types/types.d';
 
-function useTheme() {
+const useTheme = () => {
   const { theme } = useSelector<ReduxState, AppRedux>(state => state.app);
   const dispatch = useDispatch();
 
@@ -29,6 +29,6 @@ function useTheme() {
       preferredColorScheme.unSubscribe();
     };
   }, []);
-}
+};
 
 export default useTheme;

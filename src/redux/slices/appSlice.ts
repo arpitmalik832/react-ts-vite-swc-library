@@ -1,11 +1,12 @@
 import {
   createSlice,
+  PayloadAction,
   SliceCaseReducers,
   SliceSelectors,
 } from '@reduxjs/toolkit';
 
 import { THEME } from '../../enums/app';
-import { AppRedux } from '../../types/types.d';
+import { AppRedux, KeyValuePair } from '../../types/types.d';
 
 const appSlice = createSlice<
   AppRedux,
@@ -19,7 +20,7 @@ const appSlice = createSlice<
     theme: THEME.LIGHT,
   },
   reducers: {
-    updateStore: (state, action) => ({
+    updateStore: (state, action: PayloadAction<KeyValuePair>) => ({
       ...state,
       [action.payload.key]: action.payload.value,
     }),

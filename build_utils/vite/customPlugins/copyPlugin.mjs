@@ -11,8 +11,8 @@ import copy from 'rollup-plugin-copy';
  * const copyConfig = config();
  * console.log(copyConfig);
  */
-function config() {
-  return copy({
+const config = () =>
+  copy({
     targets: [
       {
         src: 'static/styles/*',
@@ -26,9 +26,12 @@ function config() {
         src: 'static/enums/icons_list.mjs',
         dest: 'dist',
       },
+      {
+        src: 'static/enums/icons_list.ts',
+        dest: 'dist',
+      },
     ],
     hook: 'writeBundle',
   });
-}
 
 export default config;

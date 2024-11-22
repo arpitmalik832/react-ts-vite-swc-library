@@ -14,5 +14,11 @@
     "emitDeclarationOnly": false,
     "downlevelIteration": true
   },
-  "include": ["src"]
+  "include": [
+    ".storybook/**/*",
+    "build_utils/**/*",
+    "src/**/*",
+    "jest.setup.ts",
+    "svgr.config.ts"
+  ]
 }

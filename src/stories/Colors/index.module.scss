@@ -1,10 +1,10 @@
-@import '../../styles/mixins/common';
-@import '../../styles/mixins/typography';
+@use '../../styles/mixins/common' as c;
+@use '../../styles/mixins/typography' as t;
 
 .colorsContainer {
   section {
-    @include flex(column, center, flex-start);
-    @include colGap(16px);
+    @include c.flex(column, center, flex-start);
+    @include c.colGap(16px);
 
     /* stylelint-disable-next-line no-duplicate-selectors */
     & {
@@ -13,13 +13,13 @@
     }
 
     .sectionHeading {
-      @include typography(h1, bold, var(--background-primary-900));
+      @include t.typography(h1, bold, var(--background-primary-900));
     }
 
     .themeHeader {
-      @include flex(row, space-between, center);
-      @include rowGap(16px);
-      @include typography(h1, bold, var(--background-primary-900));
+      @include c.flex(row, space-between, center);
+      @include c.rowGap(16px);
+      @include t.typography(h1, bold, var(--background-primary-900));
 
       /* stylelint-disable-next-line no-duplicate-selectors */
       & {
@@ -32,8 +32,8 @@
     }
 
     .colorsRow {
-      @include flex(row, space-between, center);
-      @include rowGap(16px);
+      @include c.flex(row, space-between, center);
+      @include c.rowGap(16px);
 
       /* stylelint-disable-next-line no-duplicate-selectors */
       & {
@@ -41,8 +41,8 @@
       }
 
       .colorCard {
-        @include flex(column, flex-start, flex-start);
-        @include colGap(4px);
+        @include c.flex(column, flex-start, flex-start);
+        @include c.colGap(4px);
 
         /* stylelint-disable-next-line no-duplicate-selectors */
         & {
@@ -57,11 +57,11 @@
         }
 
         .colorName {
-          @include typography(h1, bold, var(--background-primary-900));
+          @include t.typography(h1, bold, var(--background-primary-900));
         }
 
         .colorCode {
-          @include typography(h1, bold, var(--background-primary-900));
+          @include t.typography(h1, bold, var(--background-primary-900));
         }
 
         .whiteText {

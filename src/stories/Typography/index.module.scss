@@ -1,9 +1,9 @@
-@import '../../styles/mixins/common';
-@import '../../styles/mixins/typography';
+@use '../../styles/mixins/common' as c;
+@use '../../styles/mixins/typography' as t;
 
 .typeContainer {
-  @include flex(column, center, stretch);
-  @include colGap(24px);
+  @include c.flex(column, center, stretch);
+  @include c.colGap(24px);
 
   /* stylelint-disable-next-line no-duplicate-selectors */
   & {
@@ -11,11 +11,11 @@
   }
 
   .section {
-    @include flex(column, center, stretch);
-    @include colGap(8px);
+    @include c.flex(column, center, stretch);
+    @include c.colGap(8px);
 
     .sectionHeading {
-      @include typography(h1, bold, var(--background-primary-900));
+      @include t.typography(h1, bold, var(--background-primary-900));
     }
 
     &.scaleSection {
@@ -30,7 +30,7 @@
         }
 
         thead {
-          @include typography(h1, bold, var(--background-primary-900));
+          @include t.typography(h1, bold, var(--background-primary-900));
 
           /* stylelint-disable-next-line no-duplicate-selectors */
           & {
@@ -40,7 +40,7 @@
         }
 
         tbody {
-          @include typography(h1, bold, var(--background-primary-900));
+          @include t.typography(h1, bold, var(--background-primary-900));
         }
       }
     }
@@ -53,16 +53,16 @@
         justify-content: space-between;
 
         .weightContainer {
-          @include flex(column, center, center);
-          @include colGap(4px);
+          @include c.flex(column, center, center);
+          @include c.colGap(4px);
 
           .weightName {
-            @include typography(h1, bold, var(--background-primary-900));
+            @include t.typography(h1, bold, var(--background-primary-900));
           }
 
           .weightDemoContainer {
-            @include flex(column, center, flex-start);
-            @include colGap(4px);
+            @include c.flex(column, center, flex-start);
+            @include c.colGap(4px);
 
             /* stylelint-disable-next-line no-duplicate-selectors */
             & {

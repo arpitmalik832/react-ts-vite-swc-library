@@ -63,7 +63,7 @@ printf "\n${Blue}=================================${NC}\n"
 
 printf "${Green}Start - Knipping of the code.${NC}"
 
-yarn knip:prod:check-files
+pnpm knip:prod:check-files
 
 printf "${Green}End - Knipping of the code.${NC}"
 
@@ -74,7 +74,7 @@ printf "\n${Blue}=================================${NC}\n"
 
 printf "${Green}Start - lint-staged of the code.${NC}"
 
-yarn lint-staged
+pnpm lint-staged
 # Adding changes made by lint-staged
 git add .
 
@@ -87,7 +87,7 @@ printf "\n${Blue}=================================${NC}\n"
 
 printf "${Green}Start - Linting of the code.${NC}"
 
-yarn lint:fix
+pnpm lint:fix
 # Adding changes made by lint-staged
 git add .
 
@@ -100,7 +100,7 @@ printf "\n${Blue}=================================${NC}\n"
 
 printf "${Green}Start - Unit testing.${NC}"
 
-yarn test:coverage:silent:quick
+pnpm test:coverage:silent:quick
 
 printf "${Green}End - Unit testing.${NC}"
 
@@ -111,7 +111,7 @@ printf "\n${Blue}=================================${NC}\n"
 
 # printf "${Green}Start - E2E testing.${NC}"
 
-# yarn e2e-run:pre-commit
+# pnpm e2e-run:pre-commit
 
 # printf "${Green}End - E2E testing.${NC}"
 
@@ -122,7 +122,7 @@ printf "\n${Blue}=================================${NC}\n"
 
 # printf "${Green}Start - Check build (staging).${NC}"
 
-# yarn build
+# pnpm build
 
 # printf "${Green}End - Check build (staging).${NC}"
 
@@ -133,7 +133,7 @@ printf "\n${Blue}=================================${NC}\n"
 
 # printf "${Green}Start - Check build (beta).${NC}"
 
-# yarn build:beta
+# pnpm build:beta
 
 # printf "${Green}End - Check build (beta).${NC}"
 
@@ -144,7 +144,7 @@ printf "\n${Blue}=================================${NC}\n"
 
 printf "${Green}Start - Check build (production).${NC}"
 
-yarn build:prod
+pnpm build:prod
 
 printf "${Green}End - Check build (production).${NC}"
 
@@ -155,7 +155,7 @@ printf "\n${Blue}=================================${NC}\n"
 
 # printf "${Green}Start - Check storybook:build (Staging).${NC}"
 
-# yarn storybook:build
+# pnpm storybook:build
 
 # printf "${Green}End - Check storybook:build (Staging).${NC}"
 
@@ -166,7 +166,7 @@ printf "\n${Blue}=================================${NC}\n"
 
 # printf "${Green}Start - Check storybook:build (Beta).${NC}"
 
-# yarn storybook:build:beta
+# pnpm storybook:build:beta
 
 # printf "${Green}End - Check storybook:build (Beta).${NC}"
 
@@ -177,7 +177,7 @@ printf "\n${Blue}=================================${NC}\n"
 
 printf "${Green}Start - Check storybook:build (Production).${NC}"
 
-yarn storybook:build:prod
+pnpm storybook:build:prod
 
 printf "${Green}End - Check storybook:build (Production).${NC}"
 

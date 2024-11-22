@@ -1,7 +1,7 @@
 import { mergeConfig, UserConfig } from 'vite';
 
-import { ENVS } from '../build_utils/config/index.mjs';
-import { ERR_NO_BE_ENV_FLAG } from '../build_utils/config/logs.mjs';
+import { ENVS } from '../build_utils/config';
+import { ERR_NO_BE_ENV_FLAG } from '../build_utils/config/logs';
 
 export default {
   stories: ['../src/**/*.stories.@(js|jsx|ts|tsx)', '../src/**/*.mdx'],
@@ -14,7 +14,7 @@ export default {
     'storybook-addon-render-modes',
   ],
   framework: '@storybook/react-vite',
-  async viteFinal(config: UserConfig, { configType }) {
+  viteFinal: (config: UserConfig) => {
     if (!process.env.BE_ENV) {
       throw new Error(ERR_NO_BE_ENV_FLAG);
     }
