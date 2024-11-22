@@ -12,13 +12,9 @@ describe('ComponentWithSuspense unit tests', () => {
     cleanup();
   });
 
-  function Component() {
-    return <div data-testid="mock-component" />;
-  }
+  const Component = () => <div data-testid="mock-component" />;
 
-  function Fallback() {
-    return <div data-testid="mock-fallback" />;
-  }
+  const Fallback = () => <div data-testid="mock-fallback" />;
 
   test('ComponentWithSuspense snapshot test', () => {
     const component = render(

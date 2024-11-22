@@ -17,7 +17,7 @@ const ERR_NO_APP_ENV_FLAG =
  * @example
  * SERVER_STARTED_SUCCESSFULLY(3000);
  */
-const SERVER_STARTED_SUCCESSFULLY = port => {
+const SERVER_STARTED_SUCCESSFULLY = (port: number) => {
   chalk.green(`Server started at ${port} successfully !!!`);
 };
 

@@ -3,24 +3,24 @@ import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import iconsList from '../../../static/enums/icons_list';
 import { capitalizeFirstChar } from '../../utils/stringUtils';
 import { copyToClipboard } from '../../utils/commonUtils';
-import { errorLog } from '../../utils/logsUtils';
+import { errorLog, log } from '../../utils/logsUtils';
 import { IconProps } from '../../types/types.d';
 
 import s from './index.module.scss';
 
-function Icon(props: IconProps) {
+const Icon = (props: IconProps) => {
   const { name } = props;
   const ImportedIconRef = useRef<FunctionComponent | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    import(/* @vite-ignore */ `../../assets/icons/${name}?import`)
-      .then(comp => {
+    import(`../../assets/icons/${name}`)
+      .then((comp: SVGComponent) => {
         ImportedIconRef.current = comp.ReactComponent;
         setLoading(false);
       })
-      .catch(e => {
+      .catch((e: Error) => {
         errorLog('Failed to fetch icon: ', e);
       });
   }, []);
@@ -28,48 +28,45 @@ function Icon(props: IconProps) {
   if (!name || loading || !ImportedIconRef.current) return null;
   // eslint-disable-next-line react/jsx-pascal-case
   return <ImportedIconRef.current />;
-}
+};
 
-function Icons() {
+const Icons = () => {
   const [currentIcon, setCurrentIcon] = useState('');
 
-  function getImportPath() {
-    return `import { ReactComponent as ${capitalizeFirstChar(
+  const getImportPath = () =>
+    `import { ReactComponent as ${capitalizeFirstChar(
       currentIcon.split('/')[1].replace('.svg', ''),
     )} } from 'library_name/icons/${currentIcon}'`;
-  }
 
-  function renderIconSection(
+  const renderIconSection = (
     size: 'sm16' | 'rg24' | 'lg32',
     icons: typeof iconsList,
-  ) {
-    return (
-      <section className={s.iconSection}>
-        <div className={s.sectionName}>{size}</div>
-        <div className={s.icons}>
-          {icons?.map((icon: string) => (
-            <div
-              role="button"
-              tabIndex={0}
-              aria-pressed="false"
-              className={s.iconBox}
-              key={icon}
-              onClick={() => {
+  ) => (
+    <section className={s.iconSection}>
+      <div className={s.sectionName}>{size}</div>
+      <div className={s.icons}>
+        {icons?.map((icon: string) => (
+          <div
+            role="button"
+            tabIndex={0}
+            aria-pressed="false"
+            className={s.iconBox}
+            key={icon}
+            onClick={() => {
+              setCurrentIcon(icon);
+            }}
+            onKeyDown={e => {
+              if (e.key === 'Enter' || e.key === ' ') {
                 setCurrentIcon(icon);
-              }}
-              onKeyDown={e => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  setCurrentIcon(icon);
-                }
-              }}
-            >
-              <Icon name={icon} />
-            </div>
-          ))}
-        </div>
-      </section>
-    );
-  }
+              }
+            }}
+          >
+            <Icon name={icon} />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 
   return (
     <div className={s.iconsListContainer}>
@@ -90,6 +87,7 @@ function Icons() {
           <div
             role="button"
             tabIndex={0}
+            aria-label="icon"
             aria-pressed="false"
             className={s.backdrop}
             onClick={() => {
@@ -129,11 +127,15 @@ function Icons() {
                 aria-pressed="false"
                 className={s.copyIcon}
                 onClick={() => {
-                  copyToClipboard(getImportPath());
+                  copyToClipboard(getImportPath(), () => {
+                    log('copied');
+                  });
                 }}
                 onKeyDown={e => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    copyToClipboard(getImportPath());
+                    copyToClipboard(getImportPath(), () => {
+                      log('copied');
+                    });
                   }
                 }}
               >
@@ -145,6 +147,6 @@ function Icons() {
       )}
     </div>
   );
-}
+};
 
 export default Icons;
