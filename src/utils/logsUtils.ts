@@ -1,52 +1,77 @@
 import { ENVS } from '../enums/app';
+import type { AllParams } from '../types/types';
 
-function log<T>(...args: T[]) {
+const log = (...args: AllParams[]) => {
   if (process.env.APP_ENV !== ENVS.PROD) {
     // eslint-disable-next-line no-console
     console.log(...args);
   }
-}
+};
 
-function errorLog<T>(...args: T[]) {
+const errorLog = (...args: AllParams[]) => {
   if (process.env.APP_ENV !== ENVS.PROD) {
     // eslint-disable-next-line no-console
     console.error(...args);
   }
-}
+};
 
-function warnLog<T>(...args: T[]) {
+const warnLog = (...args: AllParams[]) => {
   if (process.env.APP_ENV !== ENVS.PROD) {
     // eslint-disable-next-line no-console
     console.warn(...args);
   }
-}
+};
 
-function debugLog<T>(...args: T[]) {
+const debugLog = (...args: AllParams[]) => {
   if (process.env.APP_ENV !== ENVS.PROD) {
     // eslint-disable-next-line no-console
     console.debug(...args);
   }
-}
+};
 
-function traceLog<T>(...args: T[]) {
+const traceLog = (...args: AllParams[]) => {
   if (process.env.APP_ENV !== ENVS.PROD) {
     // eslint-disable-next-line no-console
     console.trace(...args);
   }
-}
+};
 
-function tableLog<T>(...args: T[]) {
+const tableLog = (...args: AllParams[]) => {
   if (process.env.APP_ENV !== ENVS.PROD) {
     // eslint-disable-next-line no-console
     console.table(...args);
   }
-}
+};
 
-function infoLog<T>(...args: T[]) {
+const infoLog = (...args: AllParams[]) => {
   if (process.env.APP_ENV !== ENVS.PROD) {
     // eslint-disable-next-line no-console
     console.info(...args);
   }
-}
+};
 
-export { log, errorLog, warnLog, debugLog, traceLog, tableLog, infoLog };
+const timeLog = (label: string) => {
+  if (process.env.APP_ENV !== ENVS.PROD) {
+    // eslint-disable-next-line no-console
+    console.time(label);
+  }
+};
+
+const timeEndLog = (label: string) => {
+  if (process.env.APP_ENV !== ENVS.PROD) {
+    // eslint-disable-next-line no-console
+    console.time(label);
+  }
+};
+
+export {
+  log,
+  errorLog,
+  warnLog,
+  debugLog,
+  traceLog,
+  tableLog,
+  infoLog,
+  timeLog,
+  timeEndLog,
+};

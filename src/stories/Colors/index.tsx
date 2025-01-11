@@ -8,15 +8,15 @@ import {
   ColorType,
   ColorTheme,
   PrimitiveColor,
-} from '../../types/types.d';
+} from './types';
 
-function Colors() {
-  function getColorValue(
+const Colors = () => {
+  const getColorValue = (
     type: ColorType,
     innerType: ColorInnerType,
     semanticLabel: ColorSemanticLabel,
     theme: ColorTheme,
-  ) {
+  ) => {
     const colorValue =
       tokens['color-semantics'][theme][type][innerType][semanticLabel].value;
     if (colorValue.startsWith('#')) {
@@ -26,14 +26,14 @@ function Colors() {
     return tokens['color-primitives'][colorName as PrimitiveColor][
       shade.replace('}', '') as ColorSemanticLabel
     ].value;
-  }
+  };
 
-  function renderColorBox(
+  const renderColorBox = (
     type: ColorType,
     innerType: ColorInnerType,
     semanticLabel: ColorSemanticLabel,
     theme: ColorTheme,
-  ) {
+  ) => {
     const colorValue = getColorValue(type, innerType, semanticLabel, theme);
     return (
       <div
@@ -56,7 +56,7 @@ function Colors() {
         </div>
       </div>
     );
-  }
+  };
 
   return (
     <div className={s.colorsContainer}>
@@ -98,6 +98,6 @@ function Colors() {
       )}
     </div>
   );
-}
+};
 
 export default Colors;

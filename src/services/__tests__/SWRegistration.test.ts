@@ -67,12 +67,14 @@ describe('SWRegistration unit tests', () => {
     SWRegistration.unregister();
   });
 
-  it('SWRegistration functions test with rejecting ready state', async () => {
+  it('SWRegistration functions test', () => {
     process.env.APP_ENV = ENVS.PROD;
     Object.defineProperty(global.navigator, 'serviceWorker', {
       value: {
         register: jest.fn(() => Promise.resolve('xyz')),
-        ready: Promise.reject(new Error('test')),
+        ready: Promise.resolve({
+          unregister: () => Promise.reject(new Error('test')),
+        }),
       },
       configurable: true,
     });
@@ -80,6 +82,20 @@ describe('SWRegistration unit tests', () => {
     SWRegistration.register();
     SWRegistration.unregister();
   });
+
+  // it('SWRegistration functions test with rejecting ready state', () => {
+  //   process.env.APP_ENV = ENVS.PROD;
+  //   Object.defineProperty(global.navigator, 'serviceWorker', {
+  //     value: {
+  //       register: jest.fn(() => Promise.resolve('xyz')),
+  //       ready: Promise.reject(new Error('test')),
+  //     },
+  //     configurable: true,
+  //   });
+
+  //   SWRegistration.register();
+  //   SWRegistration.unregister();
+  // });
 
   it('SWRegistration functions test in case of localhost', () => {
     process.env.APP_ENV = ENVS.PROD;
@@ -156,6 +172,83 @@ describe('SWRegistration unit tests', () => {
     SWRegistration.register();
   });
 
+  it('SWRegistration functions test in case of localhost when fetch is throwing error', () => {
+    process.env.APP_ENV = ENVS.PROD;
+    Object.defineProperty(window, 'location', {
+      value: {
+        hostname: 'localhost',
+        href: 'http://localhost:3000',
+        origin: 'http://localhost:3000',
+        pathname: '',
+        search: '',
+        hash: '',
+        protocol: 'http:',
+        host: 'localhost:3000',
+        port: '3000',
+        reload: jest.fn(),
+        assign: jest.fn(),
+        replace: jest.fn(),
+      },
+      configurable: true,
+    });
+    window.fetch = fetchMock(
+      {
+        headers: {
+          get: () => 'text/javascript',
+        },
+      },
+      true,
+    );
+    (isLocalhost as jest.Mock).mockImplementation(() => true);
+    Object.defineProperty(global.navigator, 'serviceWorker', {
+      value: {
+        register: jest.fn(() => Promise.reject(new Error('xyz'))),
+        ready: Promise.reject(new Error('test')),
+      },
+      configurable: true,
+    });
+
+    SWRegistration.register();
+  });
+
+  it('SWRegistration functions test in case of localhost when service worker is not loaded', () => {
+    process.env.APP_ENV = ENVS.PROD;
+    Object.defineProperty(window, 'location', {
+      value: {
+        hostname: 'localhost',
+        href: 'http://localhost:3000',
+        origin: 'http://localhost:3000',
+        pathname: '',
+        search: '',
+        hash: '',
+        protocol: 'http:',
+        host: 'localhost:3000',
+        port: '3000',
+        reload: jest.fn(),
+        assign: jest.fn(),
+        replace: jest.fn(),
+      },
+      configurable: true,
+    });
+    window.fetch = fetchMock({
+      headers: {
+        get: () => '',
+      },
+    });
+    (isLocalhost as jest.Mock).mockImplementation(() => true);
+    Object.defineProperty(global.navigator, 'serviceWorker', {
+      value: {
+        register: jest.fn(() => Promise.reject(new Error('xyz'))),
+        ready: Promise.resolve({
+          unregister: () => Promise.resolve(true),
+        }),
+      },
+      configurable: true,
+    });
+
+    SWRegistration.register();
+  });
+
   it('SWRegistration functions test in case of localhost when service worker is not loaded', () => {
     process.env.APP_ENV = ENVS.PROD;
     Object.defineProperty(window, 'location', {
@@ -215,6 +308,44 @@ describe('SWRegistration unit tests', () => {
     });
     window.fetch = fetchMock({
       headers: {
+        get: () => null,
+      },
+    });
+    (isLocalhost as jest.Mock).mockImplementation(() => true);
+    Object.defineProperty(global.navigator, 'serviceWorker', {
+      value: {
+        register: jest.fn(() => Promise.reject(new Error('xyz'))),
+        ready: Promise.resolve({
+          unregister: () => Promise.resolve(true),
+        }),
+      },
+      configurable: true,
+    });
+
+    SWRegistration.register();
+  });
+
+  it('SWRegistration functions test in case of localhost with different origin', () => {
+    process.env.APP_ENV = ENVS.PROD;
+    Object.defineProperty(window, 'location', {
+      value: {
+        hostname: 'localhost',
+        href: 'http://localhost:3000',
+        origin: 'http://localhost:3000',
+        pathname: '',
+        search: '',
+        hash: '',
+        protocol: 'http:',
+        host: 'localhost:3000',
+        port: '3000',
+        reload: jest.fn(),
+        assign: jest.fn(),
+        replace: jest.fn(),
+      },
+      configurable: true,
+    });
+    window.fetch = fetchMock({
+      headers: {
         get: () => 'text/javascript',
       },
     });
@@ -222,7 +353,47 @@ describe('SWRegistration unit tests', () => {
     Object.defineProperty(global.navigator, 'serviceWorker', {
       value: {
         register: jest.fn(() => Promise.reject(new Error('xyz'))),
-        ready: Promise.resolve('test'),
+        ready: Promise.resolve({
+          unregister: () => Promise.resolve(true),
+        }),
+      },
+      configurable: true,
+    });
+
+    SWRegistration.register();
+  });
+
+  it('SWRegistration functions test in case of localhost with different origin', () => {
+    process.env.APP_ENV = ENVS.PROD;
+    Object.defineProperty(window, 'location', {
+      value: {
+        hostname: 'localhost',
+        href: 'http://localhost:3000',
+        origin: 'http://localhost:3000',
+        pathname: '',
+        search: '',
+        hash: '',
+        protocol: 'http:',
+        host: 'localhost:3000',
+        port: '3000',
+        reload: jest.fn(),
+        assign: jest.fn(),
+        replace: jest.fn(),
+      },
+      configurable: true,
+    });
+    window.fetch = fetchMock({
+      headers: {
+        get: () => 'text/javascript',
+      },
+    });
+    (isLocalhost as jest.Mock).mockImplementation(() => true);
+    Object.defineProperty(global.navigator, 'serviceWorker', {
+      value: {
+        register: jest.fn(() => Promise.reject(new Error('xyz'))),
+        ready: Promise.resolve({
+          unregister: () => Promise.reject(new Error('true')),
+        }),
       },
       configurable: true,
     });

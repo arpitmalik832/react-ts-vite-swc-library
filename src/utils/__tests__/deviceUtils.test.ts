@@ -12,12 +12,12 @@ describe('deviceUtils unit tests', () => {
     jest.resetAllMocks();
   });
 
-  function mockUserAgent(userAgent: string) {
+  const mockUserAgent = (userAgent: string) => {
     Object.defineProperty(global.navigator, 'userAgent', {
       value: userAgent,
       configurable: true,
     });
-  }
+  };
 
   it('isBrowser unit test', () => {
     expect(isBrowser()).toBe(true);

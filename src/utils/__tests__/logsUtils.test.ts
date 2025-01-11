@@ -8,6 +8,8 @@ import {
   traceLog,
   tableLog,
   infoLog,
+  timeLog,
+  timeEndLog,
 } from '../logsUtils';
 import { ENVS } from '../../enums/app';
 
@@ -70,5 +72,19 @@ describe('logUtils unit tests', () => {
     infoLog('test');
     process.env.APP_ENV = ENVS.PROD;
     infoLog('test');
+  });
+
+  it('timeLog unit test', () => {
+    process.env.APP_ENV = ENVS.DEV;
+    timeLog('test');
+    process.env.APP_ENV = ENVS.PROD;
+    timeLog('test');
+  });
+
+  it('timeEndLog unit test', () => {
+    process.env.APP_ENV = ENVS.DEV;
+    timeEndLog('test');
+    process.env.APP_ENV = ENVS.PROD;
+    timeEndLog('test');
   });
 });

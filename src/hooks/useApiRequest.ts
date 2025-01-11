@@ -1,118 +1,103 @@
 import { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 import { handleRequest } from '../utils/apiUtils';
-import { AbortControllers } from '../types/types.d';
 
-function useApiRequest() {
+type AbortControllers = Record<string, AbortController>;
+
+const useApiRequest = () => {
   let abortControllers: AbortControllers = {};
 
-  function createAbortController(key: string) {
+  const createAbortController = (key: string) => {
     if (!abortControllers[key]) {
       abortControllers[key] = new AbortController();
     }
 
     return abortControllers[key];
-  }
+  };
 
-  function makeGetCall<D>(
+  const makeGetCall = <D>(
     url: string,
-    axiosInstance?: AxiosInstance,
+    axiosInstance: AxiosInstance,
     config?: AxiosRequestConfig,
-  ) {
+  ) => {
     const abortController = createAbortController(JSON.stringify(url));
 
     const { signal } = abortController;
 
-    if (axiosInstance) {
-      return handleRequest<D>(
-        axiosInstance.get(url, {
-          ...config,
-          signal,
-        }),
-      );
-    }
+    return handleRequest<D>(
+      axiosInstance.get(url, {
+        ...config,
+        signal,
+      }),
+    );
+  };
 
-    return new Error('Axios instance not provided');
-  }
-
-  function makePostCall<T, D>(
+  const makePostCall = <T, D>(
     url: string,
     body: T,
-    axiosInstance?: AxiosInstance,
+    axiosInstance: AxiosInstance,
     config?: AxiosRequestConfig,
-  ) {
+  ) => {
     const abortController = createAbortController(JSON.stringify(url));
 
     const { signal } = abortController;
 
-    if (axiosInstance) {
-      return handleRequest<D>(
-        axiosInstance.post(url, body, {
-          ...config,
-          signal,
-        }),
-      );
-    }
+    return handleRequest<D>(
+      axiosInstance.post(url, body, {
+        ...config,
+        signal,
+      }),
+    );
+  };
 
-    return new Error('Axios instance not provided');
-  }
-
-  function makePutCall<T, D>(
+  const makePutCall = <T, D>(
     url: string,
     body: T,
-    axiosInstance?: AxiosInstance,
+    axiosInstance: AxiosInstance,
     config?: AxiosRequestConfig,
-  ) {
+  ) => {
     const abortController = createAbortController(JSON.stringify(url));
 
     const { signal } = abortController;
 
-    if (axiosInstance) {
-      return handleRequest<D>(
-        axiosInstance.put(url, body, {
-          ...config,
-          signal,
-        }),
-      );
-    }
+    return handleRequest<D>(
+      axiosInstance.put(url, body, {
+        ...config,
+        signal,
+      }),
+    );
+  };
 
-    return new Error('Axios instance not provided');
-  }
-
-  function makeDeleteCall<D>(
+  const makeDeleteCall = <D>(
     url: string,
-    axiosInstance?: AxiosInstance,
+    axiosInstance: AxiosInstance,
     config?: AxiosRequestConfig,
-  ) {
+  ) => {
     const abortController = createAbortController(JSON.stringify(url));
 
     const { signal } = abortController;
 
-    if (axiosInstance) {
-      return handleRequest<D>(
-        axiosInstance.delete(url, {
-          ...config,
-          signal,
-        }),
-      );
-    }
+    return handleRequest<D>(
+      axiosInstance.delete(url, {
+        ...config,
+        signal,
+      }),
+    );
+  };
 
-    return new Error('Axios instance not provided');
-  }
-
-  function cancelRequest(key: string) {
+  const cancelRequest = (key: string) => {
     if (abortControllers[JSON.stringify(key)]) {
       abortControllers[JSON.stringify(key)].abort();
       delete abortControllers[JSON.stringify(key)];
     }
-  }
+  };
 
-  function cancelAllRequests() {
+  const cancelAllRequests = () => {
     Object.keys(abortControllers).forEach(key => {
       abortControllers[key].abort();
     });
     abortControllers = {};
-  }
+  };
 
   return {
     makeGetCall,
@@ -122,6 +107,6 @@ function useApiRequest() {
     cancelRequest,
     cancelAllRequests,
   };
-}
+};
 
 export default useApiRequest;

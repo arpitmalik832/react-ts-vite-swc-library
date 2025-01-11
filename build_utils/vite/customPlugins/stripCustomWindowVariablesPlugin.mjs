@@ -28,11 +28,11 @@ const generate = _generate.default;
  * };
  * const transformedCode = stripCustomWindowVariables(options);
  */
-export default function stripCustomWindowVariables({
+const stripCustomWindowVariables = ({
   include = ['**/*.{cjs,mjs,js,jsx,ts,tsx}'],
   variables = [],
   exclude = [],
-}) {
+}) => {
   const filter = createFilter(include, exclude);
 
   return {
@@ -86,4 +86,6 @@ export default function stripCustomWindowVariables({
       };
     },
   };
-}
+};
+
+export default stripCustomWindowVariables;
