@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 
 import { useDebounce, useThrottle } from '../reactUtils';
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('react', () => ({
   _esModule: true,
   ...jest.requireActual('react'),

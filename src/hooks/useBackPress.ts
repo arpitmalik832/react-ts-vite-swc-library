@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import {
   clearStack,
@@ -8,10 +8,12 @@ import {
   pushStack,
 } from '../redux/slices/navigationSlice';
 import beforeUnload from '../utils/eventListeners/beforeUnload';
-import { log } from '../utils/logsUtils';
-import { ReduxState, NavigationRedux, VoidFunction } from '../types/types.d';
+import { errorLog, log } from '../utils/logsUtils';
+import type { ReduxState, NavigationRedux } from '../redux/types';
+import type { VoidFunctionWithParams } from '../types/types';
+import { APP_UNMOUNT, BACK_CLICK } from '../enums/app';
 
-function useBackPress() {
+const useBackPress = () => {
   const { stack } = useSelector<ReduxState, NavigationRedux>(
     state => state.navigation,
   );
@@ -22,7 +24,16 @@ function useBackPress() {
     if (stack.length) {
       dispatch(popStack(undefined));
     } else {
-      navigate(-1);
+      const res = navigate(-1);
+      if (res instanceof Promise) {
+        res
+          .then(() => {
+            log(BACK_CLICK.SUCCESS);
+          })
+          .catch((err: Error) => {
+            errorLog(BACK_CLICK.ERROR, err);
+          });
+      }
     }
   }, [stack]);
 
@@ -30,7 +41,7 @@ function useBackPress() {
 
   useEffect(() => {
     beforeUnload.subscribe(() => {
-      log('😬 user back clicked!!');
+      log(APP_UNMOUNT);
     });
 
     return () => {
@@ -38,13 +49,13 @@ function useBackPress() {
     };
   }, []);
 
-  function push(callback: VoidFunction) {
+  const push = (callback: VoidFunctionWithParams) => {
     dispatch(pushStack(callback));
-  }
+  };
 
-  function pop() {
+  const pop = () => {
     handleBackPress();
-  }
+  };
 
   const clear = useCallback(() => {
     if (stack.length) {
@@ -53,6 +64,6 @@ function useBackPress() {
   }, [stack]);
 
   return { stack, push, pop, clear };
-}
+};
 
 export default useBackPress;

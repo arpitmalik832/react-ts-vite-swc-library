@@ -1,27 +1,25 @@
-import { VoidFunction } from '../types/types.d';
+import type { AllParams, VoidFunctionWithParams } from '../types/types';
 import { errorLog } from './logsUtils';
 
-function isNonInteger<T>(val: T) {
-  return val === '.' || !/^[0-9,]*$/.test(val as string);
-}
+const isNonInteger = <T>(val: T) =>
+  val === '.' || !/^[0-9,]*$/.test(val as string);
 
-function triggerCallback<T extends VoidFunction>(
-  callback?: VoidFunction,
-  ...args: Parameters<T>
-) {
+const triggerCallback = (
+  callback?: VoidFunctionWithParams,
+  ...args: AllParams[]
+) => {
   if (callback && typeof callback === 'function') {
     callback(...args);
   }
-}
+};
 
-function generateUniqSerial(base: number) {
-  return 'xxxx-xxxx-xxx-xxxx'.replace(/[x]/g, () => {
+const generateUniqSerial = (base: number) =>
+  'xxxx-xxxx-xxx-xxxx'.replace(/[x]/g, () => {
     const r = Math.floor(Math.random() * 16);
     return r.toString(base);
   });
-}
 
-function generateRandomString(len: number) {
+const generateRandomString = (len: number) => {
   let result = '';
   const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -30,17 +28,15 @@ function generateRandomString(len: number) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
-}
+};
 
-function getMaskedValue(str: string) {
-  return `${str}`.replace(/.(?=.{4})/g, '*');
-}
+const getMaskedValue = (str: string) => `${str}`.replace(/.(?=.{4})/g, '*');
 
-function downloadFileFromData(
+const downloadFileFromData = (
   fileData: BlobPart,
-  fileName: string = 'file.pdf',
-  contentType: string = 'application/pdf',
-) {
+  fileName = 'file.pdf',
+  contentType = 'application/pdf',
+) => {
   const file = new Blob([fileData], { type: contentType });
   const url = window.URL.createObjectURL(file);
   const link = document.createElement('a');
@@ -49,35 +45,36 @@ function downloadFileFromData(
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-}
+};
 
-function getEncodedURI(url: string, pathname: string) {
-  return `redirect=${encodeURIComponent(url)}&pathname=${pathname.slice(1)}`;
-}
+const getEncodedURI = (url: string, pathname: string) =>
+  `redirect=${encodeURIComponent(url)}&pathname=${pathname.slice(1)}`;
 
-function scrollToTop() {
+const scrollToTop = () => {
   window.scrollTo(0, 0);
-}
+};
 
-async function copyToClipboard(text: string) {
-  try {
-    await navigator?.clipboard?.writeText(text);
-  } catch (e) {
-    errorLog('Failed to copy: ', e);
-  }
-}
+const copyToClipboard = (text: string, callback: VoidFunctionWithParams) => {
+  navigator?.clipboard
+    ?.writeText(text)
+    .then(() => {
+      callback();
+    })
+    .catch((e: DOMException) => {
+      errorLog('Failed to copy: ', e);
+    });
+};
 
-function isLocalhost() {
-  return Boolean(
+const isLocalhost = () =>
+  Boolean(
     window.location.hostname === 'localhost' ||
       // [::1] is the IPv6 localhost address.
       window.location.hostname === '[::1]' ||
       // 127.0.0.0/8 are considered localhost for IPv4.
-      window.location.hostname.match(
-        /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/,
+      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/.test(
+        window.location.hostname,
       ),
   );
-}
 
 export {
   isNonInteger,
