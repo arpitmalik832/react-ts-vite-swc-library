@@ -32,6 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_TOKEN }}
       - name: Installing pnpm ${{ env.PNPM_VERSION }}
         uses: pnpm/action-setup@v4
         with:
@@ -43,8 +45,9 @@ jobs:
           cache: 'pnpm'
       - name: Configure Git
         run: |
-          git config --global user.name 'arpitmalik832'
-          git config --global user.email 'arpit08malik2000@gmail.com'
+          git remote set-url origin https://${{ github.actor }}:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
       - name: Authenticating with GitHub Packages
         run: |
           sed -i 's|//npm.pkg.github.com/:_authToken=${GH_TOKEN}|#//npm.pkg.github.com/:_authToken=${GH_TOKEN}|' .npmrc
