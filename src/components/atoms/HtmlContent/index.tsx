@@ -1,8 +1,7 @@
 import { Helmet, HelmetProvider } from 'react-helmet-async';
+import type { HtmlContentProps } from './types';
 
-import { HtmlContentProps } from '../../../types/types.d';
-
-function HtmlContent(props: HtmlContentProps) {
+const HtmlContent = (props: HtmlContentProps) => {
   const { title, description } = props;
 
   return (
@@ -13,6 +12,6 @@ function HtmlContent(props: HtmlContentProps) {
       </Helmet>
     </HelmetProvider>
   );
-}
+};
 
 export default HtmlContent;
