@@ -4,7 +4,6 @@ exports[`index.ts exports snapshot test 1`] = `
 {
   "useApiRequest": [Function],
   "useBackPress": [Function],
-  "useInitAxios": [Function],
   "useTheme": [Function],
 }
 `;

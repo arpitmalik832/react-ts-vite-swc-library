@@ -13,6 +13,7 @@ import {
   isLocalhost,
 } from '../commonUtils';
 import { log } from '../logsUtils';
+import type { AllParams } from '../../types/types';
 
 describe('commonUtils unit tests', () => {
   afterEach(() => {
@@ -25,7 +26,7 @@ describe('commonUtils unit tests', () => {
   });
 
   it('testing triggerCallback', () => {
-    triggerCallback(x => {
+    triggerCallback((...[x]: AllParams[]) => {
       log(x);
     }, 'a');
 

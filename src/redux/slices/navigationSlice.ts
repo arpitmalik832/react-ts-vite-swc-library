@@ -5,7 +5,9 @@ import {
   SliceSelectors,
 } from '@reduxjs/toolkit';
 
-import { NavigationRedux, VoidFunction } from '../../types/types.d';
+import type { NavigationRedux } from '../types';
+import type { VoidFunctionWithParams } from '../../types/types';
+import { SLICE_NAMES } from '../../enums/redux';
 
 const navigationSlice = createSlice<
   NavigationRedux,
@@ -14,14 +16,14 @@ const navigationSlice = createSlice<
   SliceSelectors<NavigationRedux>,
   string
 >({
-  name: 'navigation',
+  name: SLICE_NAMES.NAVIGATION,
   initialState: {
     stack: [],
   },
   reducers: {
     pushStack: (
       state: NavigationRedux,
-      action: PayloadAction<VoidFunction>,
+      action: PayloadAction<VoidFunctionWithParams>,
     ) => {
       state.stack.push(action.payload);
       return state;

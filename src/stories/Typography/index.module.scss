@@ -3,16 +3,16 @@
 
 .typeContainer {
   @include c.flex(column, center, stretch);
-  @include c.colGap(24px);
+  @include c.colGap(1.5rem);
 
   /* stylelint-disable-next-line no-duplicate-selectors */
   & {
-    padding: 0 16px 16px;
+    padding: 0 1rem 1rem;
   }
 
   .section {
     @include c.flex(column, center, stretch);
-    @include c.colGap(8px);
+    @include c.colGap(0.5rem);
 
     .sectionHeading {
       @include t.typography(h1, bold, var(--background-primary-900));
@@ -25,8 +25,8 @@
 
         th,
         td {
-          padding: 4px 8px;
-          border: 1px solid var(--background-primary-900);
+          padding: 0.25rem 0.5rem;
+          border: 0.0625rem solid var(--background-primary-900);
         }
 
         thead {
@@ -48,13 +48,13 @@
     &.weightSection {
       .sectionBody {
         display: grid;
-        grid-gap: 16px 8px;
-        grid-template-columns: repeat(auto-fill, minmax(355px, 1fr));
+        grid-gap: 1rem 0.5rem;
+        grid-template-columns: repeat(auto-fill, minmax(22.1875rem, 1fr));
         justify-content: space-between;
 
         .weightContainer {
           @include c.flex(column, center, center);
-          @include c.colGap(4px);
+          @include c.colGap(0.25rem);
 
           .weightName {
             @include t.typography(h1, bold, var(--background-primary-900));
@@ -62,14 +62,14 @@
 
           .weightDemoContainer {
             @include c.flex(column, center, flex-start);
-            @include c.colGap(4px);
+            @include c.colGap(0.25rem);
 
             /* stylelint-disable-next-line no-duplicate-selectors */
             & {
               width: 100%;
-              padding: 4px 8px;
+              padding: 0.25rem 0.5rem;
+              border: 0.0625rem solid var(--background-primary-900);
               color: var(--background-primary-900);
-              border: 1px solid var(--background-primary-900);
             }
           }
         }

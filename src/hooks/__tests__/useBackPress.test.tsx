@@ -5,12 +5,17 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 
 import useBackPress from '../useBackPress';
-import { BeforeUnloadEventListener } from '../../types/types.d';
+import type { BeforeUnloadEventListener } from '../../utils/types';
 import { navigationSlice } from '../../redux/slices';
 
-jest.mock('react-router-dom', () => ({
+jest.mock('react-router', () => ({
   __esModule: true,
-  useNavigate: jest.fn().mockReturnValue(jest.fn()),
+  useNavigate: jest.fn(() => {
+    if (Math.random() > 0.5) {
+      return jest.fn(() => Promise.resolve());
+    }
+    return jest.fn(() => Promise.reject(new Error('an error')));
+  }),
 }));
 
 jest.mock('../../utils/eventListeners/beforeUnload', () => ({
@@ -49,6 +54,39 @@ describe('useBackPress unit tests', () => {
     );
 
     expect(component).toMatchSnapshot();
+  });
+
+  it('testing functions', () => {
+    const store = configureStore({
+      reducer: {
+        navigation: navigationSlice.reducer,
+      },
+    });
+
+    const TempComponent = () => {
+      const { push, pop } = useBackPress();
+
+      useEffect(() => {
+        push(jest.fn());
+      }, []);
+
+      return (
+        <div data-testid="temp-component">
+          <button type="button" data-testid="temp-btn" onClick={pop}>
+            temp btn
+          </button>
+        </div>
+      );
+    };
+
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <TempComponent />
+      </Provider>,
+    );
+
+    fireEvent.click(getByTestId('temp-btn'));
+    fireEvent.click(getByTestId('temp-btn'));
   });
 
   it('testing functions', () => {

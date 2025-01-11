@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setDarkTheme, setLightTheme } from '../redux/slices/appSlice';
 import preferredColorScheme from '../utils/eventListeners/preferredColorScheme';
 import { THEME } from '../enums/app';
-import { ReduxState, AppRedux } from '../types/types.d';
+import type { ReduxState, AppRedux } from '../redux/types';
 
 const useTheme = () => {
   const { theme } = useSelector<ReduxState, AppRedux>(state => state.app);
