@@ -13,7 +13,8 @@ import {
   handleRequest,
 } from '../apiUtils';
 import { errorLog } from '../logsUtils';
-import { RequestMetadata, VoidFunction } from '../../types/types.d';
+import type { RequestMetadata } from '../types';
+import type { VoidFunctionWithParams } from '../../types/types';
 
 jest.mock('../commonUtils', () => ({
   __esModule: true,
@@ -132,21 +133,21 @@ describe('apiUtils unit test', () => {
     const requestMetadata: InternalAxiosRequestConfig<RequestMetadata> = {
       headers: {} as AxiosRequestHeaders,
       data: {
-        startTime: new Date(),
-        endTime: new Date(),
+        startTime: new Date().toISOString(),
+        endTime: new Date().toISOString(),
         responseTime: 0,
       },
     };
 
     (
       (axiosInstance.interceptors.request.use as jest.Mock).mock
-        .calls[0] as VoidFunction[]
+        .calls[0] as VoidFunctionWithParams[]
     )[0](requestMetadata);
 
     try {
       (
         (axiosInstance.interceptors.request.use as jest.Mock).mock
-          .calls[0] as VoidFunction[]
+          .calls[0] as VoidFunctionWithParams[]
       )[1](requestMetadata);
     } catch (r: unknown) {
       errorLog('AxiosRequestInterceptor', r as object);
@@ -155,29 +156,56 @@ describe('apiUtils unit test', () => {
 
   it('test addResponseInterceptor', () => {
     addResponseInterceptor(axiosInstance);
-    const response: AxiosResponse<string, RequestMetadata> = {
+    const response: AxiosResponse<string, string> = {
       data: 'data',
       status: 200,
       statusText: 'OK',
       headers: {} as AxiosResponseHeaders,
       config: {
         headers: {} as AxiosRequestHeaders,
-        data: {
-          startTime: new Date(),
-          endTime: new Date(),
+        data: JSON.stringify({
+          startTime: new Date().toISOString(),
+          endTime: new Date().toISOString(),
           responseTime: 0,
-        },
+        }),
       },
     };
 
     (
       (axiosInstance.interceptors.response.use as jest.Mock).mock
-        .calls[0] as VoidFunction[]
+        .calls[0] as VoidFunctionWithParams[]
     )[0](response);
     try {
       (
         (axiosInstance.interceptors.response.use as jest.Mock).mock
-          .calls[0] as VoidFunction[]
+          .calls[0] as VoidFunctionWithParams[]
+      )[1](response);
+    } catch (r: unknown) {
+      errorLog('AxiosResponseInterceptor', r as object);
+    }
+  });
+
+  it('test addResponseInterceptor', () => {
+    addResponseInterceptor(axiosInstance);
+    const response: AxiosResponse<string, string> = {
+      data: 'data',
+      status: 200,
+      statusText: 'OK',
+      headers: {} as AxiosResponseHeaders,
+      config: {
+        headers: {} as AxiosRequestHeaders,
+        data: JSON.stringify({}),
+      },
+    };
+
+    (
+      (axiosInstance.interceptors.response.use as jest.Mock).mock
+        .calls[0] as VoidFunctionWithParams[]
+    )[0](response);
+    try {
+      (
+        (axiosInstance.interceptors.response.use as jest.Mock).mock
+          .calls[0] as VoidFunctionWithParams[]
       )[1](response);
     } catch (r: unknown) {
       errorLog('AxiosResponseInterceptor', r as object);

@@ -6,7 +6,9 @@ import {
 } from '@reduxjs/toolkit';
 
 import { THEME } from '../../enums/app';
-import { AppRedux, KeyValuePair } from '../../types/types.d';
+import type { AppRedux } from '../types';
+import type { KeyValuePair } from '../../types/types';
+import { SLICE_NAMES } from '../../enums/redux';
 
 const appSlice = createSlice<
   AppRedux,
@@ -15,7 +17,7 @@ const appSlice = createSlice<
   SliceSelectors<AppRedux>,
   string
 >({
-  name: 'app',
+  name: SLICE_NAMES.APP,
   initialState: {
     theme: THEME.LIGHT,
   },

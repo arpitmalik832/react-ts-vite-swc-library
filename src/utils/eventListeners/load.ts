@@ -1,4 +1,4 @@
-import { EventListener, EventListenerUtil } from '../../types/types.d';
+import type { EventListener, EventListenerUtil } from '../types';
 
 const load: EventListenerUtil<EventListener> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function

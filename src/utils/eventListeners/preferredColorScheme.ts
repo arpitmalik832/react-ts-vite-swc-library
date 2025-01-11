@@ -1,4 +1,4 @@
-import { EventListenerUtil, MQEventListener } from '../../types/types.d';
+import type { EventListenerUtil, MQEventListener } from '../types';
 
 const preferredColorScheme: EventListenerUtil<MQEventListener> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function

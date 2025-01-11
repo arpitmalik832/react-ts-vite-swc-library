@@ -1,5 +1,5 @@
 import tokens from '../../../static/enums/design_tokens.json';
-import { TypographyScaleObject } from '../../types/types.d';
+import type { TypographyScaleObject } from './types';
 import classnames from '../../utils/classNames';
 import { capitalizeFirstChar } from '../../utils/stringUtils';
 

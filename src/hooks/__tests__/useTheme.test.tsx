@@ -11,7 +11,8 @@ import { Provider } from 'react-redux';
 import preferredColorScheme from '../../utils/eventListeners/preferredColorScheme';
 import { THEME } from '../../enums/app';
 import useTheme from '../useTheme';
-import { AppRedux, MQEventListener } from '../../types/types.d';
+import type { AppRedux } from '../../redux/types';
+import type { MQEventListener } from '../../utils/types';
 import matchMediaMock from '../../__tests__/__mocks__/matchMediaMock';
 
 jest.mock('../../utils/eventListeners/preferredColorScheme', () => ({
