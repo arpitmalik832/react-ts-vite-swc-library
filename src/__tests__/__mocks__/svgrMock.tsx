@@ -1,5 +1,3 @@
-function ReactComponent() {
-  return <div />;
-}
+const ReactComponent = () => <div />;
 
 export { ReactComponent };

@@ -4,4 +4,5 @@ export * from './hooks';
 export * from './providers';
 export * from './redux';
 export * from './services';
+export * from './types/types';
 export * from './utils';

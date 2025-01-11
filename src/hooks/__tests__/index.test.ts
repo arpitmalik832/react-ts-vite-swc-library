@@ -15,10 +15,6 @@ describe('index.ts exports', () => {
     expect(e).toHaveProperty('useBackPress');
   });
 
-  it('should export useInitAxios', () => {
-    expect(e).toHaveProperty('useInitAxios');
-  });
-
   it('should export useTheme', () => {
     expect(e).toHaveProperty('useTheme');
   });

@@ -14,7 +14,7 @@ import zlib from 'zlib';
  * // Example usage
  * buildStats('path/to/output.json');
  */
-export default function buildStats(outputPath = 'build-stats.json') {
+const buildStats = (outputPath = 'build-stats.json') => {
   let startTime;
 
   return {
@@ -85,4 +85,6 @@ export default function buildStats(outputPath = 'build-stats.json') {
       writeFileSync(outputPath, JSON.stringify(stats, null, 2));
     },
   };
-}
+};
+
+export default buildStats;

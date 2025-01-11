@@ -4,34 +4,40 @@ import { isLocalhost } from '../utils/commonUtils';
 import load from '../utils/eventListeners/load';
 import { ENVS } from '../enums/app';
 
-function registerValidSW() {
+const registerValidSW = () => {
   navigator.serviceWorker
     .register(SW_URL)
     .then(registration => {
-      log(LOGS.SUCCESS, registration.toString());
+      log(LOGS.SUCCESS, registration);
     })
-    .catch(error => {
+    .catch((error: DOMException) => {
       errorLog(LOGS.REGISTRATION_ERROR, error);
     });
-}
+};
 
-function checkValidSW() {
+const checkValidSW = () => {
   fetch(SW_URL, {
     headers: { 'Service-Worker': 'script' },
   })
     .then(response => {
       // To ensure if service worker exists, and that we really are getting a JS file.
       const contentType = response.headers.get('content-type');
-      if (
-        response.status === 404 ||
-        (contentType != null && contentType.indexOf('javascript') === -1)
-      ) {
+      if (response.status === 404 || contentType?.includes('javascript')) {
         // No service worker found. Probably a different app. Reloading the page.
-        navigator.serviceWorker.ready.then(registration => {
-          registration.unregister().then(() => {
-            window.location.reload();
+        navigator.serviceWorker.ready
+          .then(registration => {
+            registration
+              .unregister()
+              .then(() => {
+                window.location.reload();
+              })
+              .catch((err: DOMException) => {
+                errorLog('registration.unregister()', err);
+              });
+          })
+          .catch((err: DOMException) => {
+            errorLog('navigator.serviceWorker.ready', err);
           });
-        });
       } else {
         // Service worker found. Proceed as normal.
         registerValidSW();
@@ -40,7 +46,7 @@ function checkValidSW() {
     .catch(() => {
       log(LOGS.NO_INTERNET);
     });
-}
+};
 
 const SWRegistration = {
   register() {
@@ -51,7 +57,7 @@ const SWRegistration = {
     ) {
       // The URL constructor is available in all browsers that support SW.
       const publicUrl = new URL(
-        process.env.PUBLIC_URL || '',
+        process.env.PUBLIC_URL ?? '',
         window.location.href,
       );
       if (publicUrl.origin !== window.location.origin) {
@@ -66,9 +72,13 @@ const SWRegistration = {
           // Running on localhost -> Let's check if the service worker still exists or not.
           checkValidSW();
 
-          navigator.serviceWorker.ready.then(() => {
-            log(LOGS.SW_READY);
-          });
+          navigator.serviceWorker.ready
+            .then(() => {
+              log(LOGS.SW_READY);
+            })
+            .catch((err: DOMException) => {
+              errorLog('navigator.serviceWorker.ready', err);
+            });
         } else {
           // Not localhost -> Just register the service worker
           registerValidSW();
@@ -80,10 +90,12 @@ const SWRegistration = {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.ready
         .then(registration => {
-          registration.unregister();
+          registration.unregister().catch((err: DOMException) => {
+            errorLog('registration.unregister()', err);
+          });
         })
-        .catch(error => {
-          errorLog(error.message);
+        .catch((error: DOMException) => {
+          errorLog('navigator.serviceWorker.ready', error.message);
         });
     }
   },

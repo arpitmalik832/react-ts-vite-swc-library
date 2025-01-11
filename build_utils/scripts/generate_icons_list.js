@@ -20,7 +20,7 @@ import {
  * // Example usage:
  * const icons = await getIcons('/path/to/icons');
  */
-async function getIcons(dir) {
+const getIcons = async dir => {
   const dirents = await readdir(dir, { withFileTypes: true });
   const files = await Promise.all(
     dirents.map(dirent => {
@@ -31,7 +31,7 @@ async function getIcons(dir) {
     }),
   );
   return Array.prototype.concat(...files);
-}
+};
 
 /**
  * Processes icon files in the specified directory.
@@ -40,7 +40,7 @@ async function getIcons(dir) {
  * // Example usage:
  * await processIcons('/path/to/icons');
  */
-async function processIcons(dir) {
+const processIcons = async dir => {
   const files = await getIcons(dir);
   const filesNew = files.map(i => i.replace(/\\/g, '/'));
   const content = `/**
@@ -59,7 +59,7 @@ export default list;
 `;
   await writeFile(iconsListJSPath, content);
   await writeFile(iconsListTSPath, content);
-}
+};
 
 processIcons(iconsPath)
   .then(() => {
