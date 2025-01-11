@@ -16,13 +16,15 @@ const registerValidSW = () => {
 };
 
 const checkValidSW = () => {
+  log(LOGS.CHECKING_SW);
   fetch(SW_URL, {
     headers: { 'Service-Worker': 'script' },
   })
     .then(response => {
       // To ensure if service worker exists, and that we really are getting a JS file.
-      const contentType = response.headers.get('content-type');
-      if (response.status === 404 || contentType?.includes('javascript')) {
+      const contentType = response.headers?.get('content-type');
+      if (response.status === 404 || !contentType?.includes('javascript')) {
+        log(LOGS.NO_SW);
         // No service worker found. Probably a different app. Reloading the page.
         navigator.serviceWorker.ready
           .then(registration => {
@@ -40,6 +42,7 @@ const checkValidSW = () => {
           });
       } else {
         // Service worker found. Proceed as normal.
+        log(LOGS.SW_FOUND);
         registerValidSW();
       }
     })
