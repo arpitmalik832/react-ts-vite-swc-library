@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 
 import Loader from '../../organisms/Loader';
-import { ComponentWithSuspenseProps } from '../../../types/types.d';
+import type { ComponentWithSuspenseProps } from './types';
 
 const ComponentWithSuspense = (props: ComponentWithSuspenseProps) => {
   const { component, fallback = <Loader /> } = props;

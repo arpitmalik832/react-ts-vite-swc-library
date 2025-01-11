@@ -1,7 +1,8 @@
 import { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 import { handleRequest } from '../utils/apiUtils';
-import { AbortControllers } from '../types/types.d';
+
+type AbortControllers = Record<string, AbortController>;
 
 const useApiRequest = () => {
   let abortControllers: AbortControllers = {};

@@ -1,7 +1,4 @@
-import {
-  BeforeUnloadEventListener,
-  EventListenerUtil,
-} from '../../types/types.d';
+import type { BeforeUnloadEventListener, EventListenerUtil } from '../types';
 
 const beforeUnload: EventListenerUtil<BeforeUnloadEventListener> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function

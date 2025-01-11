@@ -4,12 +4,12 @@
 .colorsContainer {
   section {
     @include c.flex(column, center, flex-start);
-    @include c.colGap(16px);
+    @include c.colGap(1rem);
 
     /* stylelint-disable-next-line no-duplicate-selectors */
     & {
-      margin-bottom: 24px;
-      padding: 0 16px;
+      margin-bottom: 1.5rem;
+      padding: 0 1rem;
     }
 
     .sectionHeading {
@@ -18,7 +18,7 @@
 
     .themeHeader {
       @include c.flex(row, space-between, center);
-      @include c.rowGap(16px);
+      @include c.rowGap(1rem);
       @include t.typography(h1, bold, var(--background-primary-900));
 
       /* stylelint-disable-next-line no-duplicate-selectors */
@@ -33,7 +33,7 @@
 
     .colorsRow {
       @include c.flex(row, space-between, center);
-      @include c.rowGap(16px);
+      @include c.rowGap(1rem);
 
       /* stylelint-disable-next-line no-duplicate-selectors */
       & {
@@ -42,18 +42,17 @@
 
       .colorCard {
         @include c.flex(column, flex-start, flex-start);
-        @include c.colGap(4px);
+        @include c.colGap(0.25rem);
 
         /* stylelint-disable-next-line no-duplicate-selectors */
         & {
           overflow: hidden;
 
           width: 50%;
-          height: 200px;
-          padding: 8px;
-
-          border: 1px solid var(--background-primary-900);
-          border-radius: 4px;
+          height: 12.5rem;
+          padding: 0.5rem;
+          border: 0.0625rem solid var(--background-primary-900);
+          border-radius: 0.25rem;
         }
 
         .colorName {

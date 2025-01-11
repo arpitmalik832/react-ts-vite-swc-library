@@ -1,8 +1,11 @@
 import { useState } from 'react';
 
-import { VoidFunction } from '../types/types.d';
+import type { VoidFunctionWithParams } from '../types/types';
 
-const useThrottle = <T extends VoidFunction>(func: T, limit = 200) => {
+const useThrottle = <T extends VoidFunctionWithParams>(
+  func: T,
+  limit = 200,
+) => {
   const [inThrottle, setInThrottle] = useState(false);
 
   return (...args: Parameters<T>) => {
@@ -16,7 +19,10 @@ const useThrottle = <T extends VoidFunction>(func: T, limit = 200) => {
   };
 };
 
-const useDebounce = <T extends VoidFunction>(func: T, timeout = 200) => {
+const useDebounce = <T extends VoidFunctionWithParams>(
+  func: T,
+  timeout = 200,
+) => {
   let timer: NodeJS.Timeout;
   return (...args: Parameters<T>) => {
     clearTimeout(timer);
