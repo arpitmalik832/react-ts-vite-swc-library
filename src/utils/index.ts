@@ -2,6 +2,7 @@ import classNames from './classNames';
 import reportWebVitals from './reportWebVitals';
 
 export * from './apiUtils';
+export * from './appUtils';
 export * from './arrayUtils';
 export * from './commonUtils';
 export * from './converters';

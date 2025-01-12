@@ -7,7 +7,7 @@ import { resolve, join } from 'path';
 const PROJECT_ROOT = resolve();
 
 const projectRootPath = PROJECT_ROOT;
-const entryPath = join(PROJECT_ROOT, 'index.html');
+const entryPath = join(PROJECT_ROOT, 'src', 'index.ts');
 const outputPath = join(PROJECT_ROOT, 'dist');
 const storybookOutputPath = join(PROJECT_ROOT, 'storybook-static');
 const chunkManifestPath = join(outputPath, 'chunk-manifest.json');
@@ -18,6 +18,7 @@ const storybookChunkManifestPath = join(
 const iconsPath = join(PROJECT_ROOT, 'src', 'assets', 'icons');
 const iconsListJSPath = join(PROJECT_ROOT, 'static', 'enums', 'icons_list.mjs');
 const iconsListTSPath = join(PROJECT_ROOT, 'static', 'enums', 'icons_list.ts');
+const distInfoPath = join(PROJECT_ROOT, 'distInfo');
 
 export {
   projectRootPath,
@@ -28,4 +29,5 @@ export {
   iconsPath,
   iconsListJSPath,
   iconsListTSPath,
+  distInfoPath,
 };

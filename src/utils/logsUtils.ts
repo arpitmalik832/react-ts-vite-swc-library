@@ -1,5 +1,5 @@
 import { ENVS } from '../enums/app';
-import { AllParams } from '../types/types.d';
+import type { AllParams } from '../types/types';
 
 const log = (...args: AllParams[]) => {
   if (process.env.APP_ENV !== ENVS.PROD) {
@@ -50,4 +50,28 @@ const infoLog = (...args: AllParams[]) => {
   }
 };
 
-export { log, errorLog, warnLog, debugLog, traceLog, tableLog, infoLog };
+const timeLog = (label: string) => {
+  if (process.env.APP_ENV !== ENVS.PROD) {
+    // eslint-disable-next-line no-console
+    console.time(label);
+  }
+};
+
+const timeEndLog = (label: string) => {
+  if (process.env.APP_ENV !== ENVS.PROD) {
+    // eslint-disable-next-line no-console
+    console.time(label);
+  }
+};
+
+export {
+  log,
+  errorLog,
+  warnLog,
+  debugLog,
+  traceLog,
+  tableLog,
+  infoLog,
+  timeLog,
+  timeEndLog,
+};

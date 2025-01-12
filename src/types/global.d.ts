@@ -2,11 +2,6 @@ interface Window {
   backPress: () => void;
 }
 
-interface SVGComponent {
-  ReactComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-  src: string;
-}
-
 declare module '*.svg' {
   export const ReactComponent: React.FunctionComponent<
     React.SVGProps<SVGSVGElement>
