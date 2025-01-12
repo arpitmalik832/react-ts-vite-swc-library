@@ -1,15 +1,14 @@
-function isEqualsIgnoringCase(text1: string, text2: string) {
-  return text1.localeCompare(text2, undefined, { sensitivity: 'base' }) === 0;
-}
+const isEqualsIgnoringCase = (text1: string, text2: string) =>
+  text1.localeCompare(text2, undefined, { sensitivity: 'base' }) === 0;
 
-function capitalizeFirstChar(string: string) {
-  const trimmedString = string && string.trim();
+const capitalizeFirstChar = (string: string) => {
+  const trimmedString = string.trim();
   return trimmedString
     ? trimmedString[0].toUpperCase() + trimmedString.slice(1).toLowerCase()
     : '';
-}
+};
 
-function maskCharsExceptLastN(val: number | string, n = 4) {
+const maskCharsExceptLastN = (val: number | string, n = 4) => {
   let new_string = '';
   const str = val.toString();
   for (let i = 0; i < str.length - n; i += 1) {
@@ -17,9 +16,9 @@ function maskCharsExceptLastN(val: number | string, n = 4) {
   }
   new_string += str.substring(str.length - n);
   return new_string;
-}
+};
 
-function getInitials(displayName: string) {
+const getInitials = (displayName: string) => {
   const [firstName, lastName = ''] = displayName.split(' ');
 
   return displayName
@@ -27,7 +26,7 @@ function getInitials(displayName: string) {
         .slice(0, 1)
         .toUpperCase()}`
     : 'JD';
-}
+};
 
 export {
   capitalizeFirstChar,

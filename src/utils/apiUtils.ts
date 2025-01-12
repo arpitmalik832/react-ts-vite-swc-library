@@ -1,19 +1,20 @@
 import {
+  AxiosError,
   AxiosInstance,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
-import { RequestMetadata } from '../types/types.d';
+import type { RequestMetadata } from './types';
 import { log, errorLog } from './logsUtils';
 
-async function handleRequest<D>(
+const handleRequest = async <D>(
   request: Promise<AxiosResponse<D>>,
-): Promise<D> {
+): Promise<D> => {
   const modRequest = request
     .then(
       res => res.data, // Successful response
     )
-    .catch(error => {
+    .catch((error: AxiosError<D>) => {
       if (error.response) {
         // Axios API Error Response
       } else if (error.message || error.config) {
@@ -36,60 +37,84 @@ async function handleRequest<D>(
     });
 
   return modRequest;
-}
+};
 
-function addRequestInterceptor(axiosInstance: AxiosInstance) {
+const addRequestInterceptor = <T>(axiosInstance: AxiosInstance) => {
   axiosInstance.interceptors.request.use(
     request => {
-      log('Starting request -> ', request.toString());
       const newRequest: InternalAxiosRequestConfig<RequestMetadata> = {
         ...request,
         data: {
-          startTime: new Date(),
-          endTime: new Date(),
+          startTime: new Date().toISOString(),
+          endTime: new Date().toISOString(),
           responseTime: 0,
         },
       };
+      log('Starting request -> ', newRequest);
       return newRequest;
     },
-    error => {
+    (error: AxiosError<T, unknown>) => {
       errorLog('Request returned with error -> ', error);
       throw error;
     },
   );
-}
+};
 
-function addResponseInterceptor<T>(axiosInstance: AxiosInstance) {
+const addResponseInterceptor = <T>(axiosInstance: AxiosInstance) => {
   axiosInstance.interceptors.response.use(
-    response => {
-      log('Returning response -> ', response.toString());
+    (response: AxiosResponse<T, unknown>) => {
+      const metadata = JSON.parse(
+        response.config.data as string,
+      ) as RequestMetadata;
+      let updatedMetadata: RequestMetadata;
+      if (Object.entries(metadata).length) {
+        const startTime = new Date(metadata.startTime);
+        const endTime = new Date();
+        updatedMetadata = {
+          startTime: startTime.toISOString(),
+          endTime: endTime.toISOString(),
+          responseTime: endTime.getTime() - startTime.getTime(),
+        };
+      } else {
+        updatedMetadata = { startTime: '', endTime: '', responseTime: 0 };
+      }
       const newResponse: AxiosResponse<T, RequestMetadata> = {
         ...response,
         config: {
           ...response.config,
-          data: {
-            ...response.config.data,
-            endTime: new Date(),
-          },
+          data: updatedMetadata,
         },
       };
-      if (newResponse.config.data) {
-        newResponse.config.data.responseTime =
-          (newResponse.config.data.endTime.getTime() as number) -
-          (newResponse.config.data.startTime.getTime() as number);
-      }
+      log('Returning response -> ', newResponse);
       return newResponse;
     },
-    error => {
-      const newError = { ...error };
-      newError.config.data.endTime = new Date();
-      newError.config.data.responseTime =
-        newError.config.data.endTime.getTime() -
-        newError.config.data.startTime.getTime();
+    (error: AxiosError<T, unknown>) => {
+      const metadata = JSON.parse(
+        error.config!.data as string,
+      ) as RequestMetadata;
+      let updatedMetadata: RequestMetadata;
+      if (Object.entries(metadata).length) {
+        const startTime = new Date(metadata.startTime);
+        const endTime = new Date();
+        updatedMetadata = {
+          startTime: startTime.toISOString(),
+          endTime: endTime.toISOString(),
+          responseTime: endTime.getTime() - startTime.getTime(),
+        };
+      } else {
+        updatedMetadata = { startTime: '', endTime: '', responseTime: 0 };
+      }
+      const newError: AxiosError<T, unknown> = {
+        ...error,
+        config: {
+          ...error.config,
+          data: updatedMetadata,
+        } as InternalAxiosRequestConfig<RequestMetadata>,
+      };
       errorLog('Response returned with error -> ', newError);
       throw newError;
     },
   );
-}
+};
 
 export { handleRequest, addRequestInterceptor, addResponseInterceptor };

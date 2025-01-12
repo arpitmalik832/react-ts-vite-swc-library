@@ -13,6 +13,7 @@ import {
   isLocalhost,
 } from '../commonUtils';
 import { log } from '../logsUtils';
+import type { AllParams } from '../../types/types';
 
 describe('commonUtils unit tests', () => {
   afterEach(() => {
@@ -25,7 +26,7 @@ describe('commonUtils unit tests', () => {
   });
 
   it('testing triggerCallback', () => {
-    triggerCallback(x => {
+    triggerCallback((...[x]: AllParams[]) => {
       log(x);
     }, 'a');
 
@@ -53,7 +54,35 @@ describe('commonUtils unit tests', () => {
   });
 
   it('testing copyToClipboard', () => {
-    copyToClipboard('test');
+    copyToClipboard('test', () => log('copied'));
+  });
+
+  it('testing copyToClipboard when it works', () => {
+    Object.defineProperty(window, 'navigator', {
+      value: {
+        clipboard: {
+          writeText: () => Promise.resolve({}),
+        },
+      },
+      writable: true,
+      configurable: true,
+    });
+
+    copyToClipboard('test', () => log('copied'));
+  });
+
+  it('testing copyToClipboard when it fails', () => {
+    Object.defineProperty(window, 'navigator', {
+      value: {
+        clipboard: {
+          writeText: () => Promise.reject(new Error('Failed to copy')),
+        },
+      },
+      writable: true,
+      configurable: true,
+    });
+
+    copyToClipboard('test', () => log('copied'));
   });
 
   it('testing copyToClipboard when it fails', () => {
@@ -63,7 +92,7 @@ describe('commonUtils unit tests', () => {
       configurable: true,
     });
 
-    copyToClipboard('test');
+    copyToClipboard('test', () => log('copied'));
   });
 
   it('testing copyToClipboard when it fails', () => {
@@ -75,21 +104,7 @@ describe('commonUtils unit tests', () => {
       configurable: true,
     });
 
-    copyToClipboard('test');
-  });
-
-  it('testing copyToClipboard when it fails', () => {
-    Object.defineProperty(window, 'navigator', {
-      value: {
-        clipboard: {
-          writeText: undefined,
-        },
-      },
-      writable: true,
-      configurable: true,
-    });
-
-    copyToClipboard('test');
+    copyToClipboard('test', () => log('copied'));
   });
 
   it('testing downloadFileFromData', () => {

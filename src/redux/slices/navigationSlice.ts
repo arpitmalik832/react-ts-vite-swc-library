@@ -1,10 +1,13 @@
 import {
   createSlice,
+  PayloadAction,
   SliceCaseReducers,
   SliceSelectors,
 } from '@reduxjs/toolkit';
 
-import { NavigationRedux } from '../../types/types.d';
+import type { NavigationRedux } from '../types';
+import type { VoidFunctionWithParams } from '../../types/types';
+import { SLICE_NAMES } from '../../enums/redux';
 
 const navigationSlice = createSlice<
   NavigationRedux,
@@ -13,16 +16,19 @@ const navigationSlice = createSlice<
   SliceSelectors<NavigationRedux>,
   string
 >({
-  name: 'navigation',
+  name: SLICE_NAMES.NAVIGATION,
   initialState: {
     stack: [],
   },
   reducers: {
-    pushStack: (state, action) => {
+    pushStack: (
+      state: NavigationRedux,
+      action: PayloadAction<VoidFunctionWithParams>,
+    ) => {
       state.stack.push(action.payload);
       return state;
     },
-    popStack: state => {
+    popStack: (state: NavigationRedux) => {
       const top = state.stack.pop();
       if (top) {
         top();
