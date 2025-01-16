@@ -1,9 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`index.ts exports snapshot test 1`] = `
-{
-  "useApiRequest": [Function],
-  "useBackPress": [Function],
-  "useTheme": [Function],
-}
-`;

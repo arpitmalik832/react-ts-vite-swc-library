@@ -137,7 +137,8 @@
             padding: 0.5rem;
             border-radius: 0.25rem;
 
-            word-break: break-word;
+            word-break: normal;
+            overflow-wrap: break-word;
 
             background: var(--background-primary-100);
           }

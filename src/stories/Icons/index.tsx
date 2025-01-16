@@ -13,7 +13,7 @@ const Icon = (props: IconProps) => {
   const ImportedIconRef = useRef<FunctionComponent | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const importIcon = () => {
     setLoading(true);
     import(`../../assets/icons/${name}`)
       .then((comp: SVGComponent) => {
@@ -23,6 +23,10 @@ const Icon = (props: IconProps) => {
       .catch((e: Error) => {
         errorLog('Failed to fetch icon: ', e);
       });
+  };
+
+  useEffect(() => {
+    importIcon();
   }, []);
 
   if (!name || loading || !ImportedIconRef.current) return null;
@@ -48,6 +52,7 @@ const Icons = () => {
         {icons?.map((icon: string) => (
           <div
             role="button"
+            data-testid="icon-box"
             tabIndex={0}
             aria-pressed="false"
             className={s.iconBox}
@@ -83,11 +88,12 @@ const Icons = () => {
         iconsList.filter((icon: string) => icon.includes('lg32'))?.sort(),
       )}
       {currentIcon && (
-        <div className={s.modal}>
+        <div className={s.modal} data-testid="icon-modal">
           <div
             role="button"
+            data-testid="backdrop"
             tabIndex={0}
-            aria-label="icon"
+            aria-label="backdrop"
             aria-pressed="false"
             className={s.backdrop}
             onClick={() => {
@@ -104,6 +110,7 @@ const Icons = () => {
               <div className={s.iconName}>{currentIcon}</div>
               <span
                 role="button"
+                data-testid="close-icon"
                 tabIndex={0}
                 aria-pressed="false"
                 className={s.dismissIcon}
@@ -120,9 +127,12 @@ const Icons = () => {
               </span>
             </section>
             <section className={s.codeSection}>
-              <code className={s.code}>{getImportPath()}</code>
+              <code className={s.code} data-testid="code-element">
+                {getImportPath()}
+              </code>
               <span
                 role="button"
+                data-testid="copy-icon"
                 tabIndex={0}
                 aria-pressed="false"
                 className={s.copyIcon}
