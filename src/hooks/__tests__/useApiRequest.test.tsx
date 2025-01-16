@@ -1,439 +1,192 @@
-import { cleanup, fireEvent, render } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import {
-  configureStore,
-  createSlice,
-  SliceCaseReducers,
-  SliceSelectors,
-} from '@reduxjs/toolkit';
-import axios, { AxiosError, AxiosResponse } from 'axios';
-import { Provider, useSelector } from 'react-redux';
+import { renderHook } from '@testing-library/react';
+import { AxiosInstance } from 'axios';
 
 import useApiRequest from '../useApiRequest';
-import type { ApisRedux, ReduxState } from '../../redux/types';
-import { errorLog, log } from '../../utils';
-
-jest.mock('../../utils/commonUtils', () => ({
-  logRequest: jest.fn(),
-  logResponse: jest.fn(),
-  errorLogRequest: jest.fn(),
-  errorLogResponse: jest.fn(),
-}));
 
 jest.mock('../../utils/apiUtils', () => ({
   __esModule: true,
-  handleRequest: jest.fn(
-    (e: Promise<AxiosResponse<unknown>>): Promise<unknown> =>
-      e.then(res => res.data).catch((err: Error) => err),
-  ),
+  handleRequest: jest.fn((e: Promise<object>) => e),
 }));
 
-describe('useApiRequest unit tests', () => {
-  afterEach(() => {
-    cleanup();
+describe('useApiRequest', () => {
+  type Body = object;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('snapshot test', () => {
-    const apisSlice = createSlice<
-      ApisRedux,
-      SliceCaseReducers<ApisRedux>,
-      string,
-      SliceSelectors<ApisRedux>,
-      string
-    >({
-      name: 'apis',
-      initialState: [
-        {
-          host: 'https://jsonplaceholder.typicode.com/',
-          headers: {},
-          axiosInstance: axios.create(),
-        },
-      ],
-      reducers: {},
-    });
-
-    const store = configureStore({
-      reducer: {
-        apis: apisSlice.reducer,
-      },
-    });
-
-    const TempComponent = () => {
-      useApiRequest();
-
-      return (
-        <button data-testid="temp-component" type="button">
-          Mocked
-        </button>
-      );
+  test('GET request', async () => {
+    const respBody = {
+      userId: 1,
+      id: 1,
+      title:
+        'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
+      body: 'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto',
     };
+    const axiosInstance = {
+      get: jest.fn().mockImplementation(() => Promise.resolve(respBody)),
+    };
+    const spy = jest.spyOn(axiosInstance, 'get');
 
-    const component = render(
-      <Provider store={store}>
-        <TempComponent />
-      </Provider>,
-    );
+    const { result } = renderHook(() => useApiRequest());
 
-    expect(component).toMatchSnapshot();
+    try {
+      const resp = await result.current.makeGetCall<Body>(
+        '/posts/1',
+        axiosInstance as unknown as AxiosInstance,
+      );
+      expect(spy).toHaveBeenCalled();
+      expect(resp).toBe(respBody);
+    } catch (err: unknown) {
+      expect((err as Error).message).toBe('Network Error');
+    }
   });
 
-  it('get api call test', () => {
-    const apisSlice = createSlice<
-      ApisRedux,
-      SliceCaseReducers<ApisRedux>,
-      string,
-      SliceSelectors<ApisRedux>,
-      string
-    >({
-      name: 'apis',
-      initialState: [
-        {
-          host: 'https://jsonplaceholder.typicode.com/',
-          headers: {},
-          axiosInstance: axios.create(),
-        },
-      ],
-      reducers: {},
-    });
-
-    const store = configureStore({
-      reducer: {
-        apis: apisSlice.reducer,
-      },
-    });
-
-    const TempComponent = () => {
-      const apis = useSelector<ReduxState, ApisRedux>(state => state.apis);
-      const { makeGetCall } = useApiRequest();
-
-      return (
-        <button
-          data-testid="temp-component"
-          type="button"
-          onClick={() => {
-            makeGetCall<Record<string, string>>(
-              'todos/1',
-              apis[0].axiosInstance,
-            )
-              .then(res => log('response', res))
-              .catch((err: AxiosError) => errorLog('error', err));
-          }}
-        >
-          Mocked
-        </button>
-      );
+  test('POST request', async () => {
+    const respBody = {
+      userId: 1,
+      id: 1,
+      title:
+        'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
+      body: 'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto',
     };
+    const axiosInstance = {
+      post: jest.fn().mockImplementation(() => Promise.resolve(respBody)),
+    };
+    const spy = jest.spyOn(axiosInstance, 'post');
 
-    const component = render(
-      <Provider store={store}>
-        <TempComponent />
-      </Provider>,
-    );
+    const { result } = renderHook(() => useApiRequest());
 
-    fireEvent.click(component.getByTestId('temp-component'));
-    fireEvent.click(component.getByTestId('temp-component'));
+    try {
+      const resp = await result.current.makePostCall<Body, Body>(
+        '/posts',
+        {},
+        axiosInstance as unknown as AxiosInstance,
+      );
+      expect(spy).toHaveBeenCalled();
+      expect(resp).toBe(respBody);
+    } catch (err: unknown) {
+      expect((err as Error).message).toBe('Network Error');
+    }
   });
 
-  it('cancel get api call test', () => {
-    const apisSlice = createSlice<
-      ApisRedux,
-      SliceCaseReducers<ApisRedux>,
-      string,
-      SliceSelectors<ApisRedux>,
-      string
-    >({
-      name: 'apis',
-      initialState: [
-        {
-          host: 'https://jsonplaceholder.typicode.com/',
-          headers: {},
-          axiosInstance: axios.create(),
-        },
-      ],
-      reducers: {},
-    });
-
-    const store = configureStore({
-      reducer: {
-        apis: apisSlice.reducer,
-      },
-    });
-
-    const TempComponent = () => {
-      const apis = useSelector<ReduxState, ApisRedux>(state => state.apis);
-      const { makeGetCall, cancelRequest } = useApiRequest();
-
-      return (
-        <button
-          data-testid="temp-component"
-          type="button"
-          onClick={() => {
-            makeGetCall<Record<string, string>>(
-              'todos/1',
-              apis[0].axiosInstance,
-            )
-              .then(res => log('response', res))
-              .catch((err: AxiosError) => errorLog('error', err));
-            cancelRequest('todos/1');
-            cancelRequest('xyz');
-          }}
-        >
-          Mocked
-        </button>
-      );
+  test('PUT request', async () => {
+    const respBody = {
+      userId: 1,
+      id: 1,
+      title:
+        'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
+      body: 'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto',
     };
+    const axiosInstance = {
+      put: jest.fn().mockImplementation(() => Promise.resolve(respBody)),
+    };
+    const spy = jest.spyOn(axiosInstance, 'put');
 
-    const component = render(
-      <Provider store={store}>
-        <TempComponent />
-      </Provider>,
-    );
+    const { result } = renderHook(() => useApiRequest());
 
-    fireEvent.click(component.getByTestId('temp-component'));
+    try {
+      const resp = await result.current.makePutCall<Body, Body>(
+        '/posts/1',
+        {},
+        axiosInstance as unknown as AxiosInstance,
+      );
+      expect(spy).toHaveBeenCalled();
+      expect(resp).toBe(respBody);
+    } catch (err: unknown) {
+      expect((err as Error).message).toBe('Network Error');
+    }
   });
 
-  it('post api call test', () => {
-    const apisSlice = createSlice<
-      ApisRedux,
-      SliceCaseReducers<ApisRedux>,
-      string,
-      SliceSelectors<ApisRedux>,
-      string
-    >({
-      name: 'apis',
-      initialState: [
-        {
-          host: 'https://jsonplaceholder.typicode.com/',
-          headers: {},
-          axiosInstance: axios.create(),
-        },
-      ],
-
-      reducers: {},
-    });
-
-    const store = configureStore({
-      reducer: {
-        apis: apisSlice.reducer,
-      },
-    });
-
-    const TempComponent = () => {
-      const apis = useSelector<ReduxState, ApisRedux>(state => state.apis);
-      const { makePostCall } = useApiRequest();
-
-      return (
-        <button
-          data-testid="temp-component"
-          type="button"
-          onClick={() => {
-            makePostCall<object, Record<string, string>>(
-              'todos/1',
-              {},
-              apis[0].axiosInstance,
-            )
-              .then(res => log('response', res))
-              .catch((err: AxiosError) => errorLog('error', err));
-          }}
-        >
-          Mocked
-        </button>
-      );
+  test('DELETE request', async () => {
+    const respBody = {
+      userId: 1,
+      id: 1,
+      title:
+        'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
+      body: 'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto',
     };
+    const axiosInstance = {
+      delete: jest.fn().mockImplementation(() => Promise.resolve(respBody)),
+    };
+    const spy = jest.spyOn(axiosInstance, 'delete');
 
-    const component = render(
-      <Provider store={store}>
-        <TempComponent />
-      </Provider>,
-    );
+    const { result } = renderHook(() => useApiRequest());
 
-    fireEvent.click(component.getByTestId('temp-component'));
+    try {
+      const resp = await result.current.makeDeleteCall<Body>(
+        '/posts/1',
+        axiosInstance as unknown as AxiosInstance,
+      );
+      expect(spy).toHaveBeenCalled();
+      expect(resp).toBe(respBody);
+    } catch (err: unknown) {
+      expect((err as Error).message).toBe('Network Error');
+    }
   });
 
-  it('put api call test', () => {
-    const apisSlice = createSlice<
-      ApisRedux,
-      SliceCaseReducers<ApisRedux>,
-      string,
-      SliceSelectors<ApisRedux>,
-      string
-    >({
-      name: 'apis',
-      initialState: [
-        {
-          host: 'https://jsonplaceholder.typicode.com/',
-          headers: {},
-          axiosInstance: axios.create(),
-        },
-      ],
-      reducers: {},
-    });
-
-    const store = configureStore({
-      reducer: {
-        apis: apisSlice.reducer,
-      },
-    });
-
-    const TempComponent = () => {
-      const apis = useSelector<ReduxState, ApisRedux>(state => state.apis);
-      const { makePutCall } = useApiRequest();
-
-      return (
-        <button
-          data-testid="temp-component"
-          type="button"
-          onClick={() => {
-            makePutCall<object, Record<string, string>>(
-              'todos/1',
-              {},
-              apis[0].axiosInstance,
-            )
-              .then(res => log('response', res))
-              .catch((err: AxiosError) => errorLog('error', err));
-          }}
-        >
-          Mocked
-        </button>
-      );
+  test('request cancellation', async () => {
+    const respBody = {
+      userId: 1,
+      id: 1,
+      title:
+        'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
+      body: 'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto',
     };
+    const axiosInstance = {
+      get: jest.fn().mockImplementation(() => Promise.resolve(respBody)),
+    };
+    const spy = jest.spyOn(axiosInstance, 'get');
 
-    const component = render(
-      <Provider store={store}>
-        <TempComponent />
-      </Provider>,
-    );
+    const { result } = renderHook(() => useApiRequest());
 
-    fireEvent.click(component.getByTestId('temp-component'));
+    try {
+      const resp = await result.current.makeGetCall<Body>(
+        '/posts/1',
+        axiosInstance as unknown as AxiosInstance,
+      );
+      result.current.cancelRequest('GET /posts/1');
+      expect(spy).toHaveBeenCalled();
+      expect(resp).toBe(respBody);
+    } catch (err: unknown) {
+      expect((err as Error).message).toBe('Network Error');
+    }
   });
 
-  it('delete api call test', () => {
-    const apisSlice = createSlice<
-      ApisRedux,
-      SliceCaseReducers<ApisRedux>,
-      string,
-      SliceSelectors<ApisRedux>,
-      string
-    >({
-      name: 'apis',
-      initialState: [
-        {
-          host: 'https://jsonplaceholder.typicode.com/',
-          headers: {},
-          axiosInstance: axios.create(),
-        },
-      ],
-
-      reducers: {},
-    });
-
-    const store = configureStore({
-      reducer: {
-        apis: apisSlice.reducer,
-      },
-    });
-
-    const TempComponent = () => {
-      const apis = useSelector<ReduxState, ApisRedux>(state => state.apis);
-      const { makeDeleteCall } = useApiRequest();
-
-      return (
-        <button
-          data-testid="temp-component"
-          type="button"
-          onClick={() => {
-            makeDeleteCall<Record<string, string>>(
-              'todos/1',
-              apis[0].axiosInstance,
-            )
-              .then(res => log('response', res))
-              .catch((err: AxiosError) => errorLog('error', err));
-          }}
-        >
-          Mocked
-        </button>
-      );
+  test('cancel all requests', async () => {
+    const respBody = {
+      userId: 1,
+      id: 1,
+      title:
+        'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
+      body: 'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto',
     };
-
-    const component = render(
-      <Provider store={store}>
-        <TempComponent />
-      </Provider>,
-    );
-
-    fireEvent.click(component.getByTestId('temp-component'));
-  });
-
-  it('cancel all api calls test', () => {
-    const apisSlice = createSlice<
-      ApisRedux,
-      SliceCaseReducers<ApisRedux>,
-      string,
-      SliceSelectors<ApisRedux>,
-      string
-    >({
-      name: 'apis',
-      initialState: [
-        {
-          host: 'https://jsonplaceholder.typicode.com/',
-          headers: {},
-          axiosInstance: axios.create(),
-        },
-      ],
-
-      reducers: {},
-    });
-
-    const store = configureStore({
-      reducer: {
-        apis: apisSlice.reducer,
-      },
-    });
-
-    const TempComponent = () => {
-      const apis = useSelector<ReduxState, ApisRedux>(state => state.apis);
-      const { makePostCall, makePutCall, makeDeleteCall, cancelAllRequests } =
-        useApiRequest();
-
-      return (
-        <button
-          data-testid="temp-component"
-          type="button"
-          onClick={() => {
-            makePostCall<object, Record<string, string>>(
-              'todos/1',
-              {},
-              apis[0].axiosInstance,
-            )
-              .then(res => log('response', res))
-              .catch((err: AxiosError) => errorLog('error', err));
-            makePutCall<object, Record<string, string>>(
-              'todos/1',
-              {},
-              apis[0].axiosInstance,
-            )
-              .then(res => log('response', res))
-              .catch((err: AxiosError) => errorLog('error', err));
-            makeDeleteCall<Record<string, string>>(
-              'todos/1',
-              apis[0].axiosInstance,
-            )
-              .then(res => log('response', res))
-              .catch((err: AxiosError) => errorLog('error', err));
-            cancelAllRequests();
-          }}
-        >
-          Mocked
-        </button>
-      );
+    const axiosInstance = {
+      get: jest.fn().mockImplementation(() => Promise.resolve(respBody)),
+      post: jest.fn().mockImplementation(() => Promise.resolve(respBody)),
     };
+    const spy = jest.spyOn(axiosInstance, 'get');
+    const spy2 = jest.spyOn(axiosInstance, 'post');
 
-    const component = render(
-      <Provider store={store}>
-        <TempComponent />
-      </Provider>,
-    );
+    const { result } = renderHook(() => useApiRequest());
 
-    fireEvent.click(component.getByTestId('temp-component'));
+    try {
+      const resp = await result.current.makeGetCall<Body>(
+        '/posts/1',
+        axiosInstance as unknown as AxiosInstance,
+      );
+      expect(spy).toHaveBeenCalled();
+      expect(resp).toBe(respBody);
+      const resp2 = await result.current.makePostCall<Body, Body>(
+        '/posts',
+        {},
+        axiosInstance as unknown as AxiosInstance,
+      );
+      result.current.cancelAllRequests();
+      expect(spy2).toHaveBeenCalled();
+      expect(resp2).toBe(respBody);
+    } catch (err: unknown) {
+      expect((err as Error).message).toBe('Network Error');
+    }
   });
 });

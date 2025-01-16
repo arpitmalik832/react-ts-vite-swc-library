@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 
-import preferredColorScheme from '../../eventListeners/preferredColorScheme';
-import matchMediaMock from '../../../__tests__/__mocks__/matchMediaMock';
+import preferredColorScheme from '../eventListeners/preferredColorScheme';
+import matchMediaMock from '../../__tests__/__mocks__/matchMediaMock';
 
 describe('preferredColorScheme unit tests', () => {
   const callBackFn = jest.fn();
