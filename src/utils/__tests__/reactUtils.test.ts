@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import { useDebounce, useThrottle } from '../reactUtils';
@@ -18,15 +18,7 @@ describe('reactUtils unit tests', () => {
 
   it('useDebounce unit test with default timeout', () => {
     jest.useFakeTimers();
-    useDebounce(mockFunc)({ persist: jest.fn(), nativeEvent: true });
-    expect(mockFunc).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(250);
-    expect(mockFunc).toHaveBeenCalledTimes(1);
-  });
-
-  it('useDebounce unit test with default timeout', () => {
-    jest.useFakeTimers();
-    useDebounce(mockFunc)({ persist: undefined, nativeEvent: true });
+    useDebounce(mockFunc)();
     expect(mockFunc).not.toHaveBeenCalled();
     jest.advanceTimersByTime(250);
     expect(mockFunc).toHaveBeenCalledTimes(1);
@@ -42,27 +34,45 @@ describe('reactUtils unit tests', () => {
 
   it('useThrottle unit test with custom time period', () => {
     jest.useFakeTimers();
-    const result = renderHook(() => useThrottle(mockFunc, 500));
+    const { result } = renderHook(() => useThrottle(mockFunc, 500));
 
-    result.result.current();
+    act(() => {
+      result.current();
+    });
     expect(mockFunc).toHaveBeenCalledTimes(1);
 
-    jest.advanceTimersByTime(600);
+    // Second immediate call should be throttled
+    act(() => {
+      result.current();
+    });
+    expect(mockFunc).toHaveBeenCalledTimes(1);
 
-    result.result.current();
+    act(() => {
+      jest.advanceTimersByTime(600);
+    });
+
+    act(() => {
+      result.current();
+    });
     expect(mockFunc).toHaveBeenCalledTimes(2);
   });
 
   it('useThrottle unit test with default time period', () => {
     jest.useFakeTimers();
-    const result = renderHook(() => useThrottle(mockFunc));
+    const { result } = renderHook(() => useThrottle(mockFunc));
 
-    result.result.current();
+    act(() => {
+      result.current();
+    });
     expect(mockFunc).toHaveBeenCalledTimes(1);
 
-    jest.advanceTimersByTime(250);
+    act(() => {
+      jest.advanceTimersByTime(250);
+    });
 
-    result.result.current();
+    act(() => {
+      result.current();
+    });
     expect(mockFunc).toHaveBeenCalledTimes(2);
   });
 });
