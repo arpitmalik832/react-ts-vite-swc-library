@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 
-import load from '../../eventListeners/load';
+import load from '../eventListeners/load';
 
 describe('load unit tests', () => {
   const callBackFn = jest.fn();

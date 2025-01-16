@@ -38,17 +38,15 @@ const apisSlice = createSlice<
       action: PayloadAction<UpdateApiHostByValue>,
     ) => {
       const newState = state;
-      const oldApi = action.payload.oldValue;
+      const { oldValue, newValue } = action.payload;
 
-      const item = newState.find(i => i.host === oldApi);
-      if (item) {
-        const index = newState.indexOf(item);
-        if (index !== -1) {
-          newState[index] = {
-            ...item,
-            host: action.payload.newValue,
-          };
-        }
+      const index = newState.findIndex(i => i.host === oldValue);
+
+      if (index !== -1) {
+        newState[index] = {
+          ...newState[index],
+          host: newValue,
+        };
       }
       return newState;
     },
@@ -57,12 +55,12 @@ const apisSlice = createSlice<
       action: PayloadAction<UpdateApiHostByIndex>,
     ) => {
       const newState = state;
-      const { index } = action.payload;
+      const { index, newValue } = action.payload;
 
-      if (index <= newState.length) {
+      if (index <= newState.length && index >= 0) {
         newState[index] = {
           ...newState[index],
-          host: action.payload.newValue,
+          host: newValue,
         };
       }
       return newState;
@@ -72,17 +70,14 @@ const apisSlice = createSlice<
       action: PayloadAction<UpdateApiHeadersByHost>,
     ) => {
       const newState = state;
-      const { host } = action.payload;
+      const { host, newHeaders } = action.payload;
 
-      const item = newState.find(i => i.host === host);
-      if (item) {
-        const index = newState.indexOf(item);
-        if (index !== -1) {
-          newState[index] = {
-            ...item,
-            headers: action.payload.newHeaders,
-          };
-        }
+      const index = newState.findIndex(i => i.host === host);
+      if (index !== -1) {
+        newState[index] = {
+          ...newState[index],
+          headers: newHeaders,
+        };
       }
       return newState;
     },
@@ -91,12 +86,12 @@ const apisSlice = createSlice<
       action: PayloadAction<UpdateApiHeadersByIndex>,
     ) => {
       const newState = state;
-      const { index } = action.payload;
+      const { index, newHeaders } = action.payload;
 
-      if (index <= newState.length) {
+      if (index <= newState.length && index >= 0) {
         newState[index] = {
-          ...state[index],
-          headers: action.payload.newHeaders,
+          ...newState[index],
+          headers: newHeaders,
         };
       }
       return newState;
@@ -106,20 +101,17 @@ const apisSlice = createSlice<
       action: PayloadAction<AddToApiHeadersByHost>,
     ) => {
       const newState = state;
-      const { host } = action.payload;
+      const { host, newHeader } = action.payload;
 
-      const item = newState.find(i => i.host === host);
-      if (item) {
-        const index = newState.indexOf(item);
-        if (index !== -1) {
-          newState[index] = {
-            ...item,
-            headers: {
-              ...item.headers,
-              [action.payload.newHeader.key]: action.payload.newHeader.value,
-            },
-          };
-        }
+      const index = newState.findIndex(i => i.host === host);
+      if (index !== -1) {
+        newState[index] = {
+          ...newState[index],
+          headers: {
+            ...newState[index].headers,
+            [newHeader.key]: newHeader.value,
+          },
+        };
       }
       return state;
     },
@@ -128,35 +120,32 @@ const apisSlice = createSlice<
       action: PayloadAction<AddToApiHeadersByIndex>,
     ) => {
       const newState = state;
-      const { index } = action.payload;
+      const { index, newHeader } = action.payload;
 
-      if (index <= state.length) {
+      if (index <= newState.length && index >= 0) {
         newState[index] = {
           ...newState[index],
           headers: {
             ...newState[index].headers,
-            [action.payload.newHeader.key]: action.payload.newHeader.value,
+            [newHeader.key]: newHeader.value,
           },
         };
       }
-      return state;
+      return newState;
     },
     updateApiAxiosInstanceByHost: (
       state,
       action: PayloadAction<UpdateApiAxiosInstanceByHost>,
     ) => {
       const newState = state;
-      const { host } = action.payload;
+      const { host, axiosInstance } = action.payload;
 
-      const item = newState.find(i => i.host === host);
-      if (item) {
-        const index = newState.indexOf(item);
-        if (index !== -1) {
-          newState[index] = {
-            ...item,
-            axiosInstance: action.payload.axiosInstance,
-          };
-        }
+      const index = newState.findIndex(i => i.host === host);
+      if (index !== -1) {
+        newState[index] = {
+          ...newState[index],
+          axiosInstance,
+        };
       }
       return newState;
     },
@@ -165,12 +154,12 @@ const apisSlice = createSlice<
       action: PayloadAction<UpdateApiAxiosInstanceByIndex>,
     ) => {
       const newState = state;
-      const { index } = action.payload;
+      const { index, axiosInstance } = action.payload;
 
-      if (index <= newState.length) {
+      if (index <= newState.length && index >= 0) {
         newState[index] = {
           ...newState[index],
-          axiosInstance: action.payload.axiosInstance,
+          axiosInstance,
         };
       }
       return newState;

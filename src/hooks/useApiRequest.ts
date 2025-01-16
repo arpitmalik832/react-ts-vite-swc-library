@@ -20,7 +20,7 @@ const useApiRequest = () => {
     axiosInstance: AxiosInstance,
     config?: AxiosRequestConfig,
   ) => {
-    const abortController = createAbortController(JSON.stringify(url));
+    const abortController = createAbortController(`GET ${url}`);
 
     const { signal } = abortController;
 
@@ -38,7 +38,7 @@ const useApiRequest = () => {
     axiosInstance: AxiosInstance,
     config?: AxiosRequestConfig,
   ) => {
-    const abortController = createAbortController(JSON.stringify(url));
+    const abortController = createAbortController(`POST ${url}`);
 
     const { signal } = abortController;
 
@@ -56,7 +56,7 @@ const useApiRequest = () => {
     axiosInstance: AxiosInstance,
     config?: AxiosRequestConfig,
   ) => {
-    const abortController = createAbortController(JSON.stringify(url));
+    const abortController = createAbortController(`PUT ${url}`);
 
     const { signal } = abortController;
 
@@ -73,7 +73,7 @@ const useApiRequest = () => {
     axiosInstance: AxiosInstance,
     config?: AxiosRequestConfig,
   ) => {
-    const abortController = createAbortController(JSON.stringify(url));
+    const abortController = createAbortController(`DELETE ${url}`);
 
     const { signal } = abortController;
 
@@ -86,9 +86,9 @@ const useApiRequest = () => {
   };
 
   const cancelRequest = (key: string) => {
-    if (abortControllers[JSON.stringify(key)]) {
-      abortControllers[JSON.stringify(key)].abort();
-      delete abortControllers[JSON.stringify(key)];
+    if (abortControllers[key]) {
+      abortControllers[key].abort();
+      delete abortControllers[key];
     }
   };
 
