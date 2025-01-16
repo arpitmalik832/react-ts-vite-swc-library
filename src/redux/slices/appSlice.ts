@@ -7,7 +7,7 @@ import {
 
 import { THEME } from '../../enums/app';
 import type { AppRedux } from '../types';
-import type { KeyValuePair } from '../../types/types';
+import type { AllParams, KeyValuePair } from '../../types/types';
 import { SLICE_NAMES } from '../../enums/redux';
 
 const appSlice = createSlice<
@@ -22,10 +22,15 @@ const appSlice = createSlice<
     theme: THEME.LIGHT,
   },
   reducers: {
-    updateStore: (state, action: PayloadAction<KeyValuePair>) => ({
-      ...state,
-      [action.payload.key]: action.payload.value,
-    }),
+    updateStore: (state, action: PayloadAction<KeyValuePair<AllParams>>) => {
+      if (action?.payload?.key && action?.payload?.value) {
+        return {
+          ...state,
+          [action.payload.key]: action.payload.value,
+        };
+      }
+      return state;
+    },
     setDarkTheme: state => ({
       ...state,
       theme: THEME.DARK,

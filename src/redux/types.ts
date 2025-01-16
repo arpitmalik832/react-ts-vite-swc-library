@@ -1,14 +1,18 @@
 import type { AxiosInstance } from 'axios';
 
-import type { KeyValuePair, VoidFunctionWithParams } from '../types/types';
+import type {
+  AllParams,
+  KeyValuePair,
+  VoidFunctionWithParams,
+} from '../types/types';
 
-export interface AppRedux {
+export interface AppRedux extends Record<string, AllParams> {
   theme: string;
 }
 
 export interface APIData {
   host: string;
-  headers: Record<string, string>;
+  headers: Record<string, string | Record<string, string>>;
   axiosInstance: AxiosInstance;
 }
 
@@ -24,22 +28,22 @@ export interface UpdateApiHostByIndex {
 
 export interface UpdateApiHeadersByHost {
   host: string;
-  newHeaders: Record<string, string>;
+  newHeaders: Record<string, string | Record<string, string>>;
 }
 
 export interface UpdateApiHeadersByIndex {
   index: number;
-  newHeaders: Record<string, string>;
+  newHeaders: Record<string, string | Record<string, string>>;
 }
 
 export interface AddToApiHeadersByHost {
   host: string;
-  newHeader: KeyValuePair;
+  newHeader: KeyValuePair<string>;
 }
 
 export interface AddToApiHeadersByIndex {
   index: number;
-  newHeader: KeyValuePair;
+  newHeader: KeyValuePair<string>;
 }
 
 export interface UpdateApiAxiosInstanceByHost {
