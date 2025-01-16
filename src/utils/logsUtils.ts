@@ -60,7 +60,7 @@ const timeLog = (label: string) => {
 const timeEndLog = (label: string) => {
   if (process.env.APP_ENV !== ENVS.PROD) {
     // eslint-disable-next-line no-console
-    console.time(label);
+    console.timeEnd(label);
   }
 };
 

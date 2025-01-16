@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 
-import beforeUnload from '../../eventListeners/beforeUnload';
+import beforeUnload from '../eventListeners/beforeUnload';
 
 describe('beforeUnload unit tests', () => {
   const callBackFn = jest.fn();
