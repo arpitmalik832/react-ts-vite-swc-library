@@ -22,7 +22,7 @@ const useBackPress = () => {
 
   const handleBackPress = useCallback(() => {
     if (stack.length) {
-      dispatch(popStack(undefined));
+      dispatch(popStack({}));
     } else {
       const res = navigate(-1);
       if (res instanceof Promise) {
@@ -59,7 +59,7 @@ const useBackPress = () => {
 
   const clear = useCallback(() => {
     if (stack.length) {
-      dispatch(clearStack(undefined));
+      dispatch(clearStack({}));
     }
   }, [stack]);
 

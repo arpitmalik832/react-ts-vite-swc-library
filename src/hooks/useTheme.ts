@@ -13,10 +13,10 @@ const useTheme = () => {
   const updateStore = useCallback((isDark: boolean) => {
     if (isDark) {
       if (theme !== THEME.DARK) {
-        dispatch(setDarkTheme(undefined));
+        dispatch(setDarkTheme({}));
       }
     } else if (theme !== THEME.LIGHT) {
-      dispatch(setLightTheme(undefined));
+      dispatch(setLightTheme({}));
     }
   }, []);
 

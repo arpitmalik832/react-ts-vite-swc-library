@@ -129,9 +129,9 @@ button,
 html [type=button],
 [type=reset],
 [type=submit] {
-  -webkit-appearance: button;
-     -moz-appearance: button;
-          appearance: button; /* 2 */
+  -webkit-appearance: auto;
+     -moz-appearance: auto;
+          appearance: auto; /* 2 */
 }
 
 /**
@@ -168,8 +168,8 @@ html [type=button],
 */
 ::-webkit-file-upload-button {
   font: inherit; /* 2 */
-  -webkit-appearance: button;
-          appearance: button; /* 1 */
+  -webkit-appearance: auto;
+          appearance: auto; /* 1 */
 }
 
 * {
