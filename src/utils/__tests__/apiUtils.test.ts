@@ -16,7 +16,7 @@ import { errorLog } from '../logsUtils';
 import type { RequestMetadata } from '../types';
 import type { VoidFunctionWithParams } from '../../types/types';
 
-jest.mock('../commonUtils', () => ({
+jest.mock('../logsUtils', () => ({
   __esModule: true,
   log: jest.fn(),
   errorLog: jest.fn(),
@@ -150,7 +150,7 @@ describe('apiUtils unit test', () => {
           .calls[0] as VoidFunctionWithParams[]
       )[1](requestMetadata);
     } catch (r: unknown) {
-      errorLog('AxiosRequestInterceptor', r as object);
+      errorLog(r);
     }
   });
 
@@ -181,7 +181,7 @@ describe('apiUtils unit test', () => {
           .calls[0] as VoidFunctionWithParams[]
       )[1](response);
     } catch (r: unknown) {
-      errorLog('AxiosResponseInterceptor', r as object);
+      errorLog(r);
     }
   });
 
@@ -208,7 +208,7 @@ describe('apiUtils unit test', () => {
           .calls[0] as VoidFunctionWithParams[]
       )[1](response);
     } catch (r: unknown) {
-      errorLog('AxiosResponseInterceptor', r as object);
+      errorLog(r);
     }
   });
 });

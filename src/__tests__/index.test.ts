@@ -6,8 +6,4 @@ describe('index.ts exports', () => {
   it('snapshot test', () => {
     expect(e).toMatchSnapshot();
   });
-
-  it('should export ReduxProvider', () => {
-    expect(e).toHaveProperty('ReduxProvider');
-  });
 });
