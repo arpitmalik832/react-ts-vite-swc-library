@@ -15,6 +15,7 @@ import { ENVS } from '../../config/index.mjs';
 import copyPlugin from '../customPlugins/copyPlugin.mjs';
 import importStylesPlugin from '../customPlugins/importStylesPlugin.mjs';
 import { entryPath } from '../../config/commonPaths.mjs';
+import { pathChecks } from '../utils/pathUtils.mjs';
 
 const config = {
   plugins: [
@@ -76,6 +77,7 @@ const config = {
             }
             return `esm/assets/[name].[ext]`;
           },
+          path: id => pathChecks(id),
         },
         {
           format: 'cjs',
@@ -86,6 +88,7 @@ const config = {
             }
             return `cjs/assets/[name].[ext]`;
           },
+          path: id => pathChecks(id),
         },
       ],
     },

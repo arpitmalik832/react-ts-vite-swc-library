@@ -11,6 +11,7 @@ import autoprefixerPlugin from 'autoprefixer';
 import icons_list from '../../../static/enums/icons_list.mjs';
 import svgrConfig from '../../../svgr.config.mjs';
 import { ENVS } from '../../config/index.mjs';
+import { pathChecks } from '../utils/pathUtils.mjs';
 
 const config = {
   plugins: [
@@ -55,6 +56,7 @@ const config = {
           entryFileNames: `esm/[name].js`,
           chunkFileNames: `esm/[name].js`,
           assetFileNames: `esm/assets/[name].[ext]`,
+          path: id => pathChecks(id),
         },
         {
           format: 'cjs',
@@ -63,6 +65,7 @@ const config = {
           entryFileNames: `cjs/[name].js`,
           chunkFileNames: `cjs/[name].js`,
           assetFileNames: `cjs/assets/[name].[ext]`,
+          path: id => pathChecks(id),
         },
       ],
     },
